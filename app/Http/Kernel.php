@@ -22,6 +22,10 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
+    protected $routeMiddleware = [
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
+    ];
+
 
     /**
      * The application's route middleware groups.
@@ -41,7 +45,7 @@ class Kernel extends HttpKernel
         'api' => [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
