@@ -9,19 +9,24 @@ use Illuminate\Validation\ValidationException;
 
 class AuthService
 {
-    public function register(array $data): string
+    public function register(array $data): array
     {
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => 'hr',
+            'role' => $data['role'] ?? 'hr',
         ]);
 
-        return $user->createToken('UserToken')->plainTextToken;
+        $token = $user->createToken('UserToken')->plainTextToken;
+        logger()->info("User registered with token: " . $token);
+        return [
+            'token' => $token,
+            'message' => 'Đăng ký thành công. Bạn có thể đăng nhập ngay.'
+        ];
     }
 
-    public function login(array $credentials): string
+    public function login(array $credentials)
     {
         $user = User::where('email', $credentials['email'])->first();
 
@@ -30,19 +35,26 @@ class AuthService
                 'email' => ['Thông tin đăng nhập không hợp lệ.'],
             ]);
         }
+        auth()->login($user);
 
-        return $user->createToken('UserToken')->plainTextToken;
+        $token = $user->createToken('UserToken')->plainTextToken;
+        logger()->info("User registered with token: " . $token);
+        return [
+            'token' => $token,
+            'message' => 'Đăng ký thành công. Bạn có thể đăng nhập ngay.'
+        ];
     }
 
     public function logout(User $user): bool
-{
-    try {
-     // $user->currentAccessToken()->delete();
-        $user->tokens()->delete();
-        return true;
-    } catch (Exception $e) {
-        logger()->error('Logout failed: ' . $e->getMessage());
-        throw $e;
+    {
+        try {
+            // Xóa tất cả tokens của user
+            $user->tokens()->delete();
+            // $user->currentAccessToken()->delete();
+            return true;
+        } catch (Exception $e) {
+            logger()->error('Logout failed: ' . $e->getMessage());
+            throw $e;
+        }
     }
-}
 }
