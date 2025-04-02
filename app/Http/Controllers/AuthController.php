@@ -53,6 +53,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        // dd($request->user());
         try {
             // Đăng xuất session trước
             if (Auth::guard('web')->check()) {

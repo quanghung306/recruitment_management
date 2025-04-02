@@ -16,11 +16,11 @@
         <div class="card shadow-lg p-4 rounded" style="width: 400px;">
             <h2 class="text-center text-primary">Đăng Nhập</h2>
 
-            @if(session('success'))
+            <!-- @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
-            @endif
+            @endif -->
 
             <form action="{{ route('login') }}" method="POST">
                 @csrf
@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
