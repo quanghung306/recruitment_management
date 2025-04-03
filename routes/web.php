@@ -21,18 +21,16 @@ Route::middleware('guest')->group(function () {
 // dashboard
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', fn() => view('layouts.dashboard'))->name('dashboard');
+
     Route::prefix('candidates')->name('candidates.')->group(function () {
         // Route hiển thị danh sách ứng viên
         Route::get('/', [CandidateController::class, 'showCandidateForm'])->name('index');
-
         // Route tạo mới ứng viên
         Route::get('/create', [CandidateController::class, 'createCandidateForm'])->name('create');
         Route::post('/store', [CandidateController::class, 'store'])->name('store');
-
         // Route chỉnh sửa ứng viên
-        Route::get('/{candidates}/edit', [CandidateController::class, 'updateCandidateForm'])->name('edit');
-        Route::put('/{candidates}', [CandidateController::class, 'update'])->name('update');
-
+        Route::get('/{candidate}/edit', [CandidateController::class, 'updateCandidateForm'])->name('edit');
+        Route::put('/{candidate}', [CandidateController::class, 'update'])->name('update');
         // Route xóa ứng viên
         Route::delete('/{candidate}', [CandidateController::class, 'destroy'])->name('destroy');
     });

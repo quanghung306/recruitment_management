@@ -17,7 +17,6 @@
             background: #f8f9fa;
             padding: 1rem;
         }
-
         .content-wrapper {
             margin-left: 280px;
             flex-grow: 1;
@@ -60,7 +59,7 @@
     </nav>
 
     <div class="d-flex vh-100">
-    <!-- Sidebar được thiết kế lại -->
+    <!-- Sidebar  -->
     <div class="sidebar bg-dark text-white d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
         <a href="{{ route('dashboard') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <i class="fas fa-briefcase me-2 fs-4"></i>
@@ -98,43 +97,10 @@
     </div>
 
     <!-- Main Content -->
-    <main class="content-wrapper flex-grow-1 p-4" style="overflow-y: auto;">
+    <main class="content-wrapper flex-grow-1 p-4 bg-light" style="overflow-y: auto;">
         @yield('content')
     </main>
 </div>
-
-@push('styles')
-<style>
-    .sidebar {
-        height: 100vh;
-        transition: all 0.3s;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .nav-link {
-        border-radius: 5px;
-        margin-bottom: 5px;
-        transition: all 0.2s;
-    }
-
-    .nav-link:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .nav-link.active {
-        background-color: #0d6efd;
-    }
-
-    .nav-link i {
-        width: 20px;
-        text-align: center;
-    }
-
-    .content-wrapper {
-        background-color: #f8f9fa;
-    }
-</style>
-@endpush
 
 </body>
 

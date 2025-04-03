@@ -88,12 +88,10 @@
                         </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <!-- Nút Sửa -->
                                 <a href="{{ route('candidates.edit', $candidate->id) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
                                     <i class="fas fa-edit"></i>
                                 </a>
 
-                                <!-- Nút Xóa -->
                                 <form action="{{ route('candidates.destroy', $candidate->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
@@ -103,6 +101,7 @@
                                 </form>
                             </div>
                         </td>
+
                     </tr>
                     @empty
                     <tr>
