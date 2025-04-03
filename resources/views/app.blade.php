@@ -59,24 +59,82 @@
         </div>
     </nav>
 
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h4>Dashboard</h4>
-            <ul class="nav nav-pills flex-column">
-                <li><a href="{{ route('dashboard')}}" class="nav-link link-dark">Dashboard</a></li>
-                <li><a href="{{ route('candidates.index')}}" class="nav-link link-dark">Ứng viên</a></li>
-                <li><a href="#" class="nav-link link-dark">Lịch phỏng vấn</a></li>
-            </ul>
-        </div>
-        <!-- Main Content -->
-        <main class="content-wrapper">
-            @yield('content')
-        </main>
+    <div class="d-flex vh-100">
+    <!-- Sidebar được thiết kế lại -->
+    <div class="sidebar bg-dark text-white d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
+        <a href="{{ route('dashboard') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <i class="fas fa-briefcase me-2 fs-4"></i>
+            <span class="fs-5 fw-bold"> Dashboard</span>
+        </a>
+
+        <hr class="my-4">
+
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="{{ route('dashboard') }}" class="nav-link text-white {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('candidates.index') }}" class="nav-link text-white {{ request()->routeIs('candidates.*') ? 'active' : '' }}">
+                    <i class="fas fa-users me-2"></i>
+                    Application Management
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link text-white">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Interview Schedule
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link text-white">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Report
+                </a>
+            </li>
+        </ul>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Main Content -->
+    <main class="content-wrapper flex-grow-1 p-4" style="overflow-y: auto;">
+        @yield('content')
+    </main>
+</div>
+
+@push('styles')
+<style>
+    .sidebar {
+        height: 100vh;
+        transition: all 0.3s;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-link {
+        border-radius: 5px;
+        margin-bottom: 5px;
+        transition: all 0.2s;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-link.active {
+        background-color: #0d6efd;
+    }
+
+    .nav-link i {
+        width: 20px;
+        text-align: center;
+    }
+
+    .content-wrapper {
+        background-color: #f8f9fa;
+    }
+</style>
+@endpush
 
 </body>
 

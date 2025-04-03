@@ -60,7 +60,7 @@
                 <tbody>
                     @forelse($candidates as $candidate)
                     <tr>
-                    <td>{{ $loop->iteration + ($candidates->currentPage() - 1) * $candidates->perPage() }}</td>
+                        <td>{{ $loop->iteration + ($candidates->currentPage() - 1) * $candidates->perPage() }}</td>
                         <td>{{ $candidate->name }}</td>
                         <td>{{ $candidate->email }}</td>
                         <td>{{ $candidate->phone }}</td>
@@ -86,15 +86,22 @@
                             Chưa có
                             @endif
                         </td>
-                        <td>
-                        <a href="{{ route('candidates.update', $candidate->id) }}" class="btn btn-sm btn-primary">Sửa</a>
-                            <form action="{{ route('candidates.destroy', $candidate->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn chắc chắn muốn xóa?')">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </form>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <!-- Nút Sửa -->
+                                <a href="{{ route('candidates.edit', $candidate->id) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                <!-- Nút Xóa -->
+                                <form action="{{ route('candidates.destroy', $candidate->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa" onclick="return confirm('Bạn chắc chắn muốn xóa ứng viên này?')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty

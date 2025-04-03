@@ -30,7 +30,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [CandidateController::class, 'store'])->name('store');
 
         // Route chỉnh sửa ứng viên
-        Route::get('/{candidates}/edit', [CandidateController::class, 'updateCandidateForm'])->name('update');
+        Route::get('/{candidates}/edit', [CandidateController::class, 'updateCandidateForm'])->name('edit');
         Route::put('/{candidates}', [CandidateController::class, 'update'])->name('update');
 
         // Route xóa ứng viên

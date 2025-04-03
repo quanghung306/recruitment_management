@@ -51,7 +51,7 @@ class CandidateController extends Controller
     {
         $skills = Skill::all();
         $users = User::all();
-        return view('candidates.update', compact('candidate', 'skills', 'users'));
+        return view('candidates.edit', compact('candidate', 'skills', 'users'));
     }
 
     public function update(CandidateUpdateRequest $request, Candidate $candidate)
