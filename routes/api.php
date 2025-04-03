@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\SkillController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +15,12 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
+Route::middleware(['auth:sanctum,web'])->group(function () {
+    Route::get('/candidates', [CandidateController::class, 'index']);
+    Route::post('/candidates', [CandidateController::class, 'store']);
+    Route::put('/candidates/{candidate}', [CandidateController::class, 'update']);
+    Route::delete('/candidates/{candidate}', [CandidateController::class, 'destroy']);
+});
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get('/admin-only', function () {
         return response()->json(['message' => 'Chỉ Admin ']);
@@ -24,3 +32,4 @@ Route::middleware(['auth:sanctum', 'role:hr'])->group(function () {
         return response()->json(['message' => 'Chỉ HR ']);
     });
 });
+Route::apiResource('skills', SkillController::class);

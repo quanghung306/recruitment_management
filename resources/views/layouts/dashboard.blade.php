@@ -22,7 +22,6 @@
             </div>
         </div>
     </div>
-
     <div class="col-md-3">
         <div class="card bg-danger text-white">
             <div class="card-body">
@@ -51,17 +50,18 @@
             <div class="card-body">
                 <div class="progress" style="height: 30px;">
                     <div class="progress-bar bg-success" role="progressbar"
-                         style="width: 12%"
-                         aria-valuenow="12"
-                         aria-valuemin="0"
-                         aria-valuemax="100">
+                        style="width: 12%"
+                        aria-valuenow="12"
+                        aria-valuemin="0"
+                        aria-valuemax="100">
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    @php
+    /*
     <!-- <div class="col-md-6">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -88,5 +88,7 @@
             </div>
         </div>
     </div> -->
+    */
+    @endphp
 </div>
 @endsection

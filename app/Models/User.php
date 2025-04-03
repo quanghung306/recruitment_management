@@ -39,4 +39,7 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+    public function candidates() {
+        return $this->hasMany(Candidate::class);
+    }
 }
