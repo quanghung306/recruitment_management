@@ -1,4 +1,4 @@
-@extends('app')
+@extends('home')
 
 @section('title', 'Quản lý ứng viên')
 

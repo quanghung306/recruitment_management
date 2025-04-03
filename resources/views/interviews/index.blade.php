@@ -1,4 +1,4 @@
-@extends('app')
+@extends('home')
 @section('content')
 <div class="container">
     <h1>Danh sách phỏng vấn</h1>

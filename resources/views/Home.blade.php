@@ -78,7 +78,7 @@
             <li>
                 <a href="{{ route('candidates.index') }}" class="nav-link text-white {{ request()->routeIs('candidates.*') ? 'active' : '' }}">
                     <i class="fas fa-users me-2"></i>
-                    Application Management
+                    Candidate Management
                 </a>
             </li>
             <li>
