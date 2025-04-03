@@ -21,7 +21,7 @@ class CandidateController extends Controller
     public function showCandidateForm(Request $request)
     {
         $users = User::all();
-        $candidates = $this->candidateService->getAllCandidates($request->all());
+        $candidates= $this->candidateService->getAllCandidates($request->all());
         $skills = Skill::all();
 
         return view('candidates.index', compact('candidates', 'skills', 'users'));
