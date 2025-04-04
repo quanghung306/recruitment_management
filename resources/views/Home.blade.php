@@ -83,17 +83,17 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('interviews.index') }}" class="nav-link text-white">
+                    <a href="{{ route('interviews.index') }}" class="nav-link text-white {{ request()->routeIs('interviews.*') ? 'active' : '' }}">
                         <i class="fas fa-calendar-alt me-2"></i>
                         Interview Schedule
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="#" class="nav-link text-white">
                         <i class="fas fa-chart-bar me-2"></i>
                         Report
                     </a>
-                </li>
+                </li> -->
             </ul>
         </div>
         <!-- Main Content -->
