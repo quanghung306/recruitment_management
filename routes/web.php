@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route Trang chủ (chỉ là ví dụ, có thể thay đổi tùy theo ứng dụng của bạn)
 Route::get('/', function () {
-    return view('app');
+    return view('home');
 });
 
 Route::middleware('guest')->group(function () {
