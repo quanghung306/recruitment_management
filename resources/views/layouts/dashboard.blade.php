@@ -75,8 +75,8 @@
                         <div>
                             <strong>{{ $interview->candidate->name }}</strong>
                             <div class="text-muted small">
-                                {{ $interview->scheduled_at->format('d/m/Y H:i') }}
-                                ({{ $interview->scheduled_at->diffForHumans() }})
+                                {{ $interview->interview_date->format('d/m/Y H:i') }}
+                                ({{ $interview->interview_date->diffForHumans() }})
                             </div>
                         </div>
                         <a href="{{ route('interviews.show', $interview->id) }}" class="btn btn-sm btn-info">Chi tiết</a>

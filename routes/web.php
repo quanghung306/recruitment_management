@@ -2,39 +2,47 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\InterviewController;
 use Illuminate\Support\Facades\Route;
 
-// Route Trang chủ (chỉ là ví dụ, có thể thay đổi tùy theo ứng dụng của bạn)
+// Trang chủ
 Route::get('/', function () {
     return view('home');
 });
 
+// Auth routes (guest only)
 Route::middleware('guest')->group(function () {
-    // Route đăng ký
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register'); // Hiển thị form đăng ký
-    Route::post('/register', [AuthController::class, 'register']); // Xử lý đăng ký khi submit form
-    // Route đăng nhập
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login'); // Hiển thị form đăng nhập
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 });
 
-// dashboard
+// Protected routes (auth only)
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', fn() => view('layouts.dashboard'))->name('dashboard');
+    Route::get('/dashboard', fn () => view('layouts.dashboard'))->name('dashboard');
 
+    // Candidate routes
     Route::prefix('candidates')->name('candidates.')->group(function () {
-        // Route hiển thị danh sách ứng viên
         Route::get('/', [CandidateController::class, 'showCandidateForm'])->name('index');
-        // Route tạo mới ứng viên
         Route::get('/create', [CandidateController::class, 'createCandidateForm'])->name('create');
         Route::post('/store', [CandidateController::class, 'store'])->name('store');
-        // Route chỉnh sửa ứng viên
         Route::get('/{candidate}/edit', [CandidateController::class, 'updateCandidateForm'])->name('edit');
         Route::put('/{candidate}', [CandidateController::class, 'update'])->name('update');
-        // Route xóa ứng viên
         Route::delete('/{candidate}', [CandidateController::class, 'destroy'])->name('destroy');
     });
 
-    // Logout route
+    // Interview routes
+    Route::prefix('interviews')->name('interviews.')->group(function () {
+        Route::get('/', [InterviewController::class, 'showInterviewsForm'])->name('index');
+        Route::get('/create', [InterviewController::class, 'create'])->name('create');
+        Route::post('/', [InterviewController::class, 'store'])->name('store');
+        Route::get('/{interview}/edit', [InterviewController::class, 'edit'])->name('edit');
+        Route::put('/{interview}', [InterviewController::class, 'update'])->name('update');
+        Route::delete('/{interview}', [InterviewController::class, 'destroy'])->name('destroy');
+    });
+
+    // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

@@ -14,6 +14,7 @@ class Candidate extends Model
     protected $casts = [
         'skills' => 'array',
     ];
+    
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -21,5 +22,9 @@ class Candidate extends Model
     public function skills()
     {
         return $this->belongsToMany(Skill::class, 'candidate_skill');
+    }
+    public function interviews()
+    {
+        return $this->hasMany(Interview::class);
     }
 }

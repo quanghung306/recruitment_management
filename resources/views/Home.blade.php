@@ -82,7 +82,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link text-white">
+                <a href="{{ route('interviews.index') }}" class="nav-link text-white">
                     <i class="fas fa-calendar-alt me-2"></i>
                     Interview Schedule
                 </a>
