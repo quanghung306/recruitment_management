@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InterviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,7 +22,7 @@ Route::middleware('guest')->group(function () {
 
 // Protected routes (auth only)
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', fn () => view('layouts.dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'ShowDashboardForm'])->name('dashboard');
 
     // Candidate routes
     Route::prefix('candidates')->name('candidates.')->group(function () {
