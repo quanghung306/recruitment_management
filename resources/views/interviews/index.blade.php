@@ -18,12 +18,12 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Ứng viên</th>
-                        <th>Người phỏng vấn</th>
-                        <th>Thời gian</th>
-                        <th>Vòng</th>
-                        <th>Kết quả</th>
-                        <th>Thao tác</th>
+                        <th>Candidate</th>
+                        <th>Interviewer</th>
+                        <th>DateTime</th>
+                        <th>Round</th>
+                        <th>Result</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,14 +36,14 @@
                         <td>{{ $interview->round }}</td>
                         <td>
                             @switch($interview->interview_result)
-                                @case('pass') <span class="badge bg-success ls-5">Đậu</span> @break
-                                @case('fail') <span class="badge bg-danger fs-6 ">Rớt</span> @break
-                                @case('pending') <span class="badge bg-warning text-dark fs-6">Đang chờ</span> @break
-                                @default <span class="text-muted">-</span>
+                            @case('pass') <span class="badge bg-success ls-5">Đậu</span> @break
+                            @case('fail') <span class="badge bg-danger fs-6 ">Rớt</span> @break
+                            @case('pending') <span class="badge bg-warning text-dark fs-6">Đang chờ</span> @break
+                            @default <span class="text-muted">-</span>
                             @endswitch
                         </td>
                         <td class="text-center">
-                            <div class="d-flex justify-content-center gap-2">
+                            <div class="d-flex  gap-2">
                                 <a href="{{ route('interviews.edit', $interview->id) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
                                     <i class="fas fa-edit"></i>
                                 </a>

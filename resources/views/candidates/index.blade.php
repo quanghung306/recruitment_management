@@ -53,7 +53,7 @@
                         <th>Phone Number</th>
                         <th>Skills</th>
                         <th>Status</th>
-                        <th>Hr</th> <!-- Thêm cột này -->
+                        <th>Hr</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -87,7 +87,7 @@
                             @endif
                         </td>
                         <td class="text-center">
-                            <div class="d-flex justify-content-center gap-2">
+                            <div class="d-flex  gap-2">
                                 <a href="{{ route('candidates.edit', $candidate->id) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
                                     <i class="fas fa-edit"></i>
                                 </a>

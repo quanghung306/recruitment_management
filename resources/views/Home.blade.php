@@ -17,6 +17,7 @@
             background: #f8f9fa;
             padding: 1rem;
         }
+
         .content-wrapper {
             margin-left: 280px;
             flex-grow: 1;
@@ -46,7 +47,7 @@
                         <a class="nav-link" href="{{ route('register') }}">Đăng ký</a>
                     </li>
                     @else
-                    <li class="nav-item">
+                    <li class="nav-item ">
                         <form action="{{ route('logout')}}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-danger">Đăng xuất</button>
@@ -59,48 +60,47 @@
     </nav>
 
     <div class="d-flex vh-100">
-    <!-- Sidebar  -->
-    <div class="sidebar bg-dark text-white d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
-        <a href="{{ route('dashboard') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-            <i class="fas fa-briefcase me-2 fs-4"></i>
-            <span class="fs-5 fw-bold"> Dashboard</span>
-        </a>
+        <!-- Sidebar  -->
+        <div class="sidebar bg-dark text-white d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
+            <a href="{{ route('dashboard') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <i class="fas fa-briefcase me-2 fs-4"></i>
+                <span class="fs-5 fw-bold"> Dashboard</span>
+            </a>
 
-        <hr class="my-4">
+            <hr class="my-4">
 
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item">
-                <a href="{{ route('dashboard') }}" class="nav-link text-white {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <i class="fas fa-tachometer-alt me-2"></i>
-                    Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('candidates.index') }}" class="nav-link text-white {{ request()->routeIs('candidates.*') ? 'active' : '' }}">
-                    <i class="fas fa-users me-2"></i>
-                    Candidate Management
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('interviews.index') }}" class="nav-link text-white">
-                    <i class="fas fa-calendar-alt me-2"></i>
-                    Interview Schedule
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link text-white">
-                    <i class="fas fa-chart-bar me-2"></i>
-                    Report
-                </a>
-            </li>
-        </ul>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-link text-white {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('candidates.index') }}" class="nav-link text-white {{ request()->routeIs('candidates.*') ? 'active' : '' }}">
+                        <i class="fas fa-users me-2"></i>
+                        Candidate Management
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('interviews.index') }}" class="nav-link text-white">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        Interview Schedule
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        Report
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- Main Content -->
+        <main class="content-wrapper flex-grow-1 p-4 " style="overflow-y: auto;">
+            @yield('content')
+        </main>
     </div>
-
-    <!-- Main Content -->
-    <main class="content-wrapper flex-grow-1 p-4 bg-light" style="overflow-y: auto;">
-        @yield('content')
-    </main>
-</div>
 
 </body>
 
