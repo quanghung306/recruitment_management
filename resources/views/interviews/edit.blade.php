@@ -45,7 +45,7 @@
         </div>
 
         {{-- Vòng --}}
-        <div class="mb-3">
+        <div class=" row mb-3">
             <label for="round" class="form-label">Vòng phỏng vấn</label>
             <select name="round" id="round" class="form-select" required>
                 <option value="">-- Chọn vòng --</option>
@@ -69,7 +69,6 @@
             </select>
             @error('result') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
-
         <button type="submit" class="btn btn-success">Cập nhật</button>
         <a href="{{ route('interviews.index') }}" class="btn btn-secondary">Hủy</a>
     </form>
