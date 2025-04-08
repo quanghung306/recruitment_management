@@ -67,17 +67,6 @@
             @endif
         </div>
 
-        @if($confirmUrl)
-        <p>
-            <a href="{{ $confirmUrl }}" class="btn">Xác nhận tham gia</a>
-        </p>
-        @endif
-
-        <p>Trân trọng,<br>Đội ngũ tuyển dụng</p>
-
-        <div class="footer">
-            © {{ date('Y') }} Công ty TNHH ABC. Mọi quyền được bảo lưu.
-        </div>
     </div>
 </body>
 

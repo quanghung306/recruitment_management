@@ -29,7 +29,6 @@ class SendInterviewEmail implements ShouldQueue
         $interview = Interview::find($data['interview_id']);
         $candidate = $interview->candidate;
         if (!$interview) return;
-
         Mail::to($data['candidate_email'])->send(new InterviewEmail(
             subjectLine: $data['subject'],
             bodyContent: $data['content'],
@@ -37,9 +36,7 @@ class SendInterviewEmail implements ShouldQueue
             interviewTime: $interview->interview_date->format('H:i'),
             interviewMode: $interview->mode ?? 'Trực tiếp',
             candidateName: $candidate->name ?? null,
-
         ));
-
         if (!empty($data['send_copy']) && auth()->check()) {
             Mail::to(auth()->user()->email)->send(new InterviewEmail(
                 subjectLine: '[Bản sao] ' . $data['subject'],
