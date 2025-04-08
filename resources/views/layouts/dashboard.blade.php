@@ -24,13 +24,13 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">Total Candidates</span>
-                            <h2 class="mt-2 mb-0 fw-bold">1,234</h2>
+                            <h2 class="mt-2 mb-0 fw-bold">{{ $totalCandidates }}</h2>
                         </div>
                         <div class="bg-primary bg-opacity-10 p-3 rounded">
                             <i class="fas fa-users text-primary fs-4"></i>
                         </div>
                     </div>
-                    <div class="mt-3">
+                    <div class="mt-3 visually-hidden">
                         <span class="badge bg-success bg-opacity-10 text-success">
                             <i class="fas fa-arrow-up"></i> 12.5%
                         </span>
@@ -47,13 +47,13 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">Hired Candidates</span>
-                            <h2 class="mt-2 mb-0 fw-bold">156</h2>
+                            <h2 class="mt-2 mb-0 fw-bold">{{ $hiredCandidates }}</h2>
                         </div>
                         <div class="bg-success bg-opacity-10 p-3 rounded">
                             <i class="fas fa-check-circle text-success fs-4"></i>
                         </div>
                     </div>
-                    <div class="mt-3">
+                    <div class="mt-3 visually-hidden">
                         <span class="badge bg-success bg-opacity-10 text-success">
                             <i class="fas fa-arrow-up"></i> 8.3%
                         </span>
@@ -70,13 +70,13 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">Rejected Candidates</span>
-                            <h2 class="mt-2 mb-0 fw-bold">89</h2>
+                            <h2 class="mt-2 mb-0 fw-bold">{{ $rejectedCandidates }}</h2>
                         </div>
                         <div class="bg-danger bg-opacity-10 p-3 rounded">
                             <i class="fas fa-times-circle text-danger fs-4"></i>
                         </div>
                     </div>
-                    <div class="mt-3">
+                    <div class="mt-3 ">
                         <span class="badge bg-danger bg-opacity-10 text-danger">
                             <i class="fas fa-arrow-down"></i> 3.2%
                         </span>
@@ -93,13 +93,13 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">Upcoming Interviews</span>
-                            <h2 class="mt-2 mb-0 fw-bold">12</h2>
+                            <h2 class="mt-2 mb-0 fw-bold">{{ $upcomingInterviews->count() }}</h2>
                         </div>
                         <div class="bg-warning bg-opacity-10 p-3 rounded">
                             <i class="fas fa-calendar-alt text-warning fs-4"></i>
                         </div>
                     </div>
-                    <div class="mt-3">
+                    <div class="mt-3 visually-hidden">
                         <span class="badge bg-success bg-opacity-10 text-success">
                             <i class="fas fa-arrow-up"></i> 5.7%
                         </span>
@@ -149,12 +149,12 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="list-group list-group-flush">
-                        @forelse($interviews as $interview)
+                        @forelse($upcomingInterviews as $interview)
                         <div class="list-group-item list-group-item-action border-0 py-3">
                             <div class="d-flex align-items-center">
                                 <div class="flex-shrink-0">
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($interview->candidate->name) }}&background=random"
-                                         class="rounded-circle me-3" width="40" height="40" alt="Candidate">
+                                        class="rounded-circle me-3" width="40" height="40" alt="Candidate">
                                 </div>
                                 <div class="flex-grow-1">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -186,85 +186,84 @@
     </div>
 
 
-@section('scripts')
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Recruitment Chart
-    const ctx = document.getElementById('recruitmentChart').getContext('2d');
-    const recruitmentChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            datasets: [
-                {
-                    label: 'Hired',
-                    data: [12, 19, 15, 27, 22, 18],
-                    backgroundColor: 'rgba(40, 167, 69, 0.8)',
-                    borderRadius: 4
+    @section('scripts')
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Recruitment Chart
+        const ctx = document.getElementById('recruitmentChart').getContext('2d');
+        const recruitmentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                        label: 'Hired',
+                        data: [12, 19, 15, 27, 22, 18],
+                        backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Rejected',
+                        data: [8, 12, 6, 15, 10, 7],
+                        backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Pending',
+                        data: [30, 42, 38, 45, 50, 35],
+                        backgroundColor: 'rgba(255, 193, 7, 0.8)',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        align: 'end'
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        bodyColor: '#000000',
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        padding: 15,
+                        displayColors: true,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw;
+                            }
+                        }
+                    }
                 },
-                {
-                    label: 'Rejected',
-                    data: [8, 12, 6, 15, 10, 7],
-                    backgroundColor: 'rgba(220, 53, 69, 0.8)',
-                    borderRadius: 4
-                },
-                {
-                    label: 'Pending',
-                    data: [30, 42, 38, 45, 50, 35],
-                    backgroundColor: 'rgba(255, 193, 7, 0.8)',
-                    borderRadius: 4
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    align: 'end'
-                },
-                tooltip: {
-                    backgroundColor: '#ffffff',
-                    bodyColor: '#000000',
-                    borderColor: '#dddfeb',
-                    borderWidth: 1,
-                    padding: 15,
-                    displayColors: true,
-                    callbacks: {
-                        label: function(context) {
-                            return context.dataset.label + ': ' + context.raw;
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
                         }
                     }
                 }
-            },
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    }
-                }
             }
-        }
-    });
+        });
 
-    // Add hover effect to cards
-    document.querySelectorAll('.card-hover').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-5px)';
-            card.style.transition = 'transform 0.2s ease';
+        // Add hover effect to cards
+        document.querySelectorAll('.card-hover').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-5px)';
+                card.style.transition = 'transform 0.2s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
         });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = '';
-        });
-    });
-</script>
-@endsection
-@endsection
+    </script>
+    @endsection
+    @endsection
