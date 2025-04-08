@@ -55,14 +55,14 @@
 
             <div class="mb-3">
                 <label for="skills" class="form-label">Kỹ năng</label>
-                <select name="skills[]" id="skills" class="form-select">
+                <select name="skills[]" id="skills" class="form-select" >
                     @foreach($skills as $skill)
                     <option value="{{ $skill->id }}" {{ in_array($skill->id, (array) old('skills', [])) ? 'selected' : '' }}>
-
                         {{ $skill->name }}
                     </option>
                     @endforeach
                 </select>
+
 
                 @error('skills')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -79,15 +79,17 @@
                     @endforeach
                 </select>
             </div>
-
-
             <button type="submit" class="btn btn-primary">Lưu</button>
             <a href="{{ route('candidates.index') }}" class="btn btn-secondary">Hủy</a>
         </form>
     </div>
 </div>
 @endsection
-@push('scripts')
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
     $(document).ready(function() {
         $('#skills').select2({
@@ -96,4 +98,5 @@
         });
     });
 </script>
-@endpush
+
+@endsection

@@ -34,7 +34,6 @@
                         @endforeach
                     </select>
                 </div>
-
                 <div class="col-md-4 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary me-2">Lọc</button>
                     <a href="{{ route('candidates.index') }}" class="btn btn-secondary">Reset</a>
@@ -65,10 +64,11 @@
                         <td>{{ $candidate->email }}</td>
                         <td>{{ $candidate->phone }}</td>
                         <td>
-                            @foreach($skills as $skill)
+                            @foreach($candidate->skills as $skill)
                             <span>{{ $skill->name }}</span>
                             @endforeach
                         </td>
+
                         <td>
                             <span class="badge fs-6
                         @if($candidate->status == 'new') bg-info

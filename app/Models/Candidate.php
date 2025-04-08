@@ -11,10 +11,6 @@ class Candidate extends Model
 
     protected $fillable = ['name', 'email', 'phone', 'skills', 'status', 'user_id'];
 
-    protected $casts = [
-        'skills' => 'array',
-    ];
-    
     public function user()
     {
         return $this->belongsTo(User::class);

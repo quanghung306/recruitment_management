@@ -56,13 +56,14 @@
 
             <div class="mb-3">
                 <label for="skills" class="form-label">Kỹ năng</label>
-                <select name="skills[]" id="skills" class="form-select">
+                <select name="skills[]" id="skills" class="form-select" multiple>
                     @foreach($skills as $skill)
                     <option value="{{ $skill->id }}"
-                        {{ in_array($skill->id, old('skills', $candidate->skills)) ? 'selected' : '' }}>
+                        {{ in_array($skill->id, old('skills', $candidate->skills->pluck('id')->toArray())) ? 'selected' : '' }}
+
                         {{ $skill->name }}
-                    </option>
-                    @endforeach
+                        </option>
+                        @endforeach
                 </select>
 
 

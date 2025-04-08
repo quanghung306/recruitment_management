@@ -18,7 +18,7 @@ class CandidateUpdateRequest extends FormRequest
             'email' => 'sometimes|required|email|unique:candidates,email,' . $this->route('candidate')->id,
             'phone' => 'sometimes|required|string|max:20',
             'skills' => 'sometimes|required|array',
-            'status' => 'sometimes|required|in:applied,interviewing,hired,rejected',
+            'status' => 'required|in:new,interviewed,hired,rejected',
             'user_id' => 'nullable|required|exists:users,id'
         ];
     }

@@ -76,7 +76,7 @@
                             <i class="fas fa-times-circle text-danger fs-4"></i>
                         </div>
                     </div>
-                    <div class="mt-3 ">
+                    <div class="mt-3 visually-hidden ">
                         <span class="badge bg-danger bg-opacity-10 text-danger">
                             <i class="fas fa-arrow-down"></i> 3.2%
                         </span>
@@ -185,7 +185,7 @@
         </div>
     </div>
 
-
+    @endsection
     @section('scripts')
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -265,5 +265,5 @@
             });
         });
     </script>
-    @endsection
+
     @endsection

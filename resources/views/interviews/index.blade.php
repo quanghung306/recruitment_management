@@ -44,6 +44,13 @@
                         </td>
                         <td class="text-center">
                             <div class="d-flex  gap-2">
+                                <!-- Nút gửi email mời phỏng vấn -->
+                                <button class="btn btn-sm btn-outline-info send-email-btn"
+                                    data-interview-id="{{ $interview->id }}"
+                                    data-candidate-email="{{ $interview->candidate->email }}"
+                                    title="Gửi email mời">
+                                    <i class="fas fa-envelope"></i>
+                                </button>
                                 <a href="{{ route('interviews.edit', $interview->id) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -70,7 +77,9 @@
         <!-- Phân trang -->
         {{ $interviews->links() }}
     </div>
+
 </div>
+@include('interviews.partials.email_modal')
 @endsection
 
 @push('scripts')
@@ -81,6 +90,79 @@
             placeholder: "Chọn kỹ năng",
             allowClear: true
         });
+        // Mở modal khi click nút gửi email
+        $('.send-email-btn').click(function() {
+            const interviewId = $(this).data('interview-id');
+            const candidateEmail = $(this).data('candidate-email');
+
+            $('#interviewId').val(interviewId);
+            $('#candidateEmail').val(candidateEmail);
+
+            // Set tiêu đề mặc định
+            const candidateName = $(this).closest('tr').find('td:nth-child(2)').text();
+            $('#emailSubject').val(`Thư mời phỏng vấn - ${candidateName}`);
+
+            $('#emailModal').modal('show');
+        });
+
+        // Xử lý submit form gửi email
+        $('#sendEmailForm').submit(function(e) {
+            e.preventDefault();
+
+            const formData = $(this).serialize();
+            const interviewId = $('#interviewId').val();
+
+            $.ajax({
+                url: `/interviews/${interviewId}/send-email`,
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    $('#emailModal').modal('hide');
+                    showToast('success', 'Email đã được gửi thành công!');
+                },
+                error: function(xhr) {
+                    showToast('error', 'Có lỗi xảy ra khi gửi email: ' + xhr.responseJSON.message);
+                }
+            });
+        });
+
+        // Thay đổi nội dung mẫu khi chọn loại email
+        $('#emailType').change(function() {
+            updateEmailTemplate();
+        });
+
+        // Cập nhật tiêu đề khi thay đổi loại email
+        function updateEmailTemplate() {
+            const type = $('#emailType').val();
+            const candidateName = $('#emailSubject').val().replace('Thư mời phỏng vấn - ', '');
+
+            const templates = {
+                invitation: {
+                    subject: `Thư mời phỏng vấn - ${candidateName}`,
+                    content: `Kính gửi ${candidateName},\n\nCông ty chúng tôi trân trọng mời bạn tham gia buổi phỏng vấn với thông tin như sau:\n\n- Vị trí: [Vị trí phỏng vấn]\n- Thời gian: [Ngày giờ]\n- Hình thức: [Trực tiếp/Online]\n- Địa điểm/Link: [Chi tiết]\n\nVui lòng xác nhận tham gia.\n\nTrân trọng,\n[Phòng Nhân sự]`
+                },
+                reminder: {
+                    subject: `Nhắc lịch phỏng vấn - ${candidateName}`,
+                    content: `Kính gửi ${candidateName},\n\nĐây là email nhắc nhở về buổi phỏng vấn sắp tới:\n\n- Thời gian: [Ngày giờ]\n- Hình thức: [Trực tiếp/Online]\n- Địa điểm/Link: [Chi tiết]\n\nVui lòng đến đúng giờ.\n\nTrân trọng,\n[Phòng Nhân sự]`
+                },
+                result: {
+                    subject: `Kết quả phỏng vấn - ${candidateName}`,
+                    content: `Kính gửi ${candidateName},\n\nCảm ơn bạn đã tham gia phỏng vấn tại công ty chúng tôi.\n\nKết quả: [Đậu/Rớt/Chờ]\n\n[Thông tin phản hồi]\n\n[Nếu đậu: Hướng dẫn tiếp theo]\n\nTrân trọng,\n[Phòng Nhân sự]`
+                }
+            };
+
+            $('#emailSubject').val(templates[type].subject);
+            $('#emailContent').val(templates[type].content);
+        }
+
+        function showToast(type, message) {
+            // Sử dụng toastr hoặc thư viện thông báo khác
+            if (typeof toastr !== 'undefined') {
+                toastr[type](message);
+            } else {
+                alert(message);
+            }
+        }
     });
 </script>
 @endpush

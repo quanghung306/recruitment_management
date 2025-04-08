@@ -18,35 +18,49 @@ class CandidateController extends Controller
     {
         $this->candidateService = $candidateService;
     }
+
+    // Hiển thị danh sách ứng viên (view)
     public function showCandidateForm(Request $request)
     {
         $users = User::all();
-        $candidates= $this->candidateService->getAllCandidates($request->all());
         $skills = Skill::all();
+        $candidates = $this->candidateService->getAllCandidates($request->all());
 
         return view('candidates.index', compact('candidates', 'skills', 'users'));
     }
 
+    // API trả về danh sách ứng viên (JSON)
     public function index(Request $request)
     {
-
         $candidates = $this->candidateService->getAllCandidates($request->all());
-
         return response()->json($candidates);
     }
-    public function createCandidateForm(Request $request)
+
+    // Hiển thị form tạo ứng viên
+    public function createCandidateForm()
     {
         $skills = Skill::all();
-        $candidate = $this->candidateService->getAllCandidates($request->all());
         $users = User::all();
-        return view('candidates.create', compact('candidate', 'skills', 'users'));
-    }
-    public function store(CandidateStoreRequest $request)
-    {
-        $candidate = $this->candidateService->createCandidate($request->validated());
-        return response()->json($candidate, 201);
+        return view('candidates.create', compact('skills', 'users'));
     }
 
+    // Lưu ứng viên mới
+    public function store(CandidateStoreRequest $request)
+    {
+        try {
+            $candidate = $this->candidateService->createCandidate($request->validated());
+            if ($request->wantsJson()) {
+                return response()->json($candidate->load('skills'), 201);
+            }
+
+            return redirect()->route('candidates.index')->with('success', 'Ứng viên đã được tạo thành công');
+        } catch (\Exception $e) {
+            logger()->error('Error creating candidate: ' . $e->getMessage());
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    // Hiển thị form chỉnh sửa ứng viên
     public function updateCandidateForm(Candidate $candidate)
     {
         $skills = Skill::all();
@@ -54,15 +68,40 @@ class CandidateController extends Controller
         return view('candidates.edit', compact('candidate', 'skills', 'users'));
     }
 
+    // Cập nhật ứng viên
     public function update(CandidateUpdateRequest $request, Candidate $candidate)
     {
-        $candidate = $this->candidateService->updateCandidate($candidate, $request->validated());
-        return response()->json($candidate);
+        try {
+            $updatedCandidate = $this->candidateService->updateCandidate(
+                $candidate,
+                $request->validated()
+            );
+
+            if ($request->wantsJson()) {
+                return response()->json($updatedCandidate->load('skills'));
+            }
+
+            return redirect()->route('candidates.index')
+                           ->with('success', 'Ứngng viên đã được cập nhật');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
+    // Xóa ứng viên
     public function destroy(Candidate $candidate)
     {
-        $this->candidateService->deleteCandidate($candidate);
-        return response()->json(['message' => 'Xóa thành công']);
+        try {
+            $this->candidateService->deleteCandidate($candidate);
+
+            if (request()->wantsJson()) {
+                return response()->json(['message' => 'Xóa thành công']);
+            }
+
+            return redirect()->route('candidates.index')
+                           ->with('success', 'Ứng viên đã được xóa');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 }

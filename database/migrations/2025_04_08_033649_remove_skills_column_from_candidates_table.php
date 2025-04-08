@@ -11,19 +11,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('candidate_skill', function (Blueprint $table) {
-            $table->foreignId('candidate_id')->constrained();
-            $table->foreignId('skill_id')->constrained();
-            $table->primary(['candidate_id', 'skill_id']); 
+        Schema::table('candidates', function (Blueprint $table) {
+            $table->dropColumn('skills');
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('candidate_skill');
+        Schema::table('candidates', function (Blueprint $table) {
+            //
+        });
     }
 };
