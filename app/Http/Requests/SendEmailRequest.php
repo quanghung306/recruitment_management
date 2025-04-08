@@ -21,7 +21,7 @@ class SendEmailRequest extends FormRequest
      */
     public function rules(): array
     {
-    
+       
         return [
                 'interview_id' => 'required|exists:interviews,id',
                 'candidate_email' => 'required|email',

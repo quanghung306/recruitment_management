@@ -14,14 +14,16 @@ use App\Mail\InterviewEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use App\Jobs\SendInterviewEmail;
+
 class InterviewController extends Controller
 {
     public function __construct(protected InterviewService $interviewService) {}
 
-    public function showInterviewsForm(Request $request)
+    public function showInterviewsForm(Request $request )
     {
+
         $interviews = $this->interviewService->getAllInterview($request->all());
-        return view('interviews.index', compact('interviews'));
+        return view('interviews.index', compact('interviews',));
     }
     public function index(Request $request)
     {
@@ -76,11 +78,10 @@ class InterviewController extends Controller
         return back()->with('success', 'Xóa lịch phỏng vấn thành công!');
     }
     public function sendEmail(SendEmailRequest $request)
-{
-    $data = $request->validated();
-    // Dispatch job
-    SendInterviewEmail::dispatch($data);
+    {
+        $data = $request->validated();
+        SendInterviewEmail::dispatch($data);
 
-    return back()->with('success', 'Đã gửi email thành công!');
-}
+        return back()->with('success', 'Đã gửi email thành công!');
+    }
 }

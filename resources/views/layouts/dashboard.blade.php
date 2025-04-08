@@ -7,12 +7,12 @@
     <!-- Header with date picker -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mt-4 mb-0 fw-bold">Dashboard Report</h1>
-        <div class="d-flex align-items-center">
+        <!-- <div class="d-flex align-items-center">
             <span class="text-muted me-2"><i class="far fa-calendar-alt me-2"></i>{{ now()->format('d M, Y') }}</span>
             <button class="btn btn-sm btn-outline-secondary">
                 <i class="fas fa-filter"></i> Filters
             </button>
-        </div>
+        </div> -->
     </div>
 
     <!-- Stats Cards -->

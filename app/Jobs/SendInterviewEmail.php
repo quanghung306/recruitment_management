@@ -2,47 +2,52 @@
 
 namespace App\Jobs;
 
+use App\Mail\InterviewEmail;
+use App\Models\Interview;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\InterviewEmail;
 
 class SendInterviewEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public array $emailData;
+    public array $data;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(array $emailData)
+    public function __construct(array $data)
     {
-        $this->emailData = $emailData;
+        $this->data = $data;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
-        $recipient = $this->emailData['candidate_email'];
-        $sendCopy = $this->emailData['send_copy'] ?? false;
+        $data = $this->data;
 
-        // Gửi mail chính
-        Mail::to($recipient)->send(new InterviewEmail(
-            $this->emailData['subject'],
-            $this->emailData['content']
+        $interview = Interview::find($data['interview_id']);
+        $candidate = $interview->candidate;
+        if (!$interview) return;
+
+        Mail::to($data['candidate_email'])->send(new InterviewEmail(
+            subjectLine: $data['subject'],
+            bodyContent: $data['content'],
+            interviewDate: $interview->interview_date->format('d/m/Y'),
+            interviewTime: $interview->interview_date->format('H:i'),
+            interviewMode: $interview->mode ?? 'Trực tiếp',
+            candidateName: $candidate->name ?? null,
+
         ));
 
-        // Gửi bản sao nếu có
-        if ($sendCopy && config('mail.from.address')) {
-            Mail::to(config('mail.from.address'))->send(new InterviewEmail(
-                '[Copy] ' . $this->emailData['subject'],
-                $this->emailData['content']
+        if (!empty($data['send_copy']) && auth()->check()) {
+            Mail::to(auth()->user()->email)->send(new InterviewEmail(
+                subjectLine: '[Bản sao] ' . $data['subject'],
+                bodyContent: $data['content'],
+                interviewDate: $interview->interview_date->format('d/m/Y'),
+                interviewTime: $interview->interview_date->format('H:i'),
+                interviewMode: $interview->mode ?? 'Trực tiếp',
+                candidateName: $candidate->name ?? null,
             ));
         }
     }
