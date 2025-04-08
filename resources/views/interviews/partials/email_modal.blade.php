@@ -5,7 +5,7 @@
                 <h5 class="modal-title" id="emailModalLabel">Gửi email mời phỏng vấn</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="sendEmailForm" method="POST">
+            <form id="sendEmailForm" method="POST" action="{{ route('interviews.sendEmail') }}">
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" id="interviewId" name="interview_id">
@@ -45,3 +45,4 @@
         </div>
     </div>
 </div>
+

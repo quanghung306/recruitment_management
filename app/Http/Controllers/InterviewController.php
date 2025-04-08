@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SendEmailRequest;
 use App\Http\Requests\StoreInterviewRequest;
 use App\Http\Requests\UpdateInterviewRequest;
 use App\Models\Candidate;
@@ -9,7 +10,10 @@ use App\Models\Interview;
 use App\Models\User;
 use App\Services\InterviewService;
 use Illuminate\Http\Request;
-
+use App\Mail\InterviewEmail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\SendInterviewEmail;
 class InterviewController extends Controller
 {
     public function __construct(protected InterviewService $interviewService) {}
@@ -71,4 +75,12 @@ class InterviewController extends Controller
         $this->interviewService->delete($interview);
         return back()->with('success', 'Xóa lịch phỏng vấn thành công!');
     }
+    public function sendEmail(SendEmailRequest $request)
+{
+    $data = $request->validated();
+    // Dispatch job
+    SendInterviewEmail::dispatch($data);
+
+    return back()->with('success', 'Đã gửi email thành công!');
+}
 }

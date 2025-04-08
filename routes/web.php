@@ -15,7 +15,6 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
-
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 });
@@ -33,7 +32,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/{candidate}', [CandidateController::class, 'update'])->name('update');
         Route::delete('/{candidate}', [CandidateController::class, 'destroy'])->name('destroy');
     });
-
     // Interview routes
     Route::prefix('interviews')->name('interviews.')->group(function () {
         Route::get('/', [InterviewController::class, 'showInterviewsForm'])->name('index');
@@ -42,8 +40,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/{interview}/edit', [InterviewController::class, 'edit'])->name('edit');
         Route::put('/{interview}', [InterviewController::class, 'update'])->name('update');
         Route::delete('/{interview}', [InterviewController::class, 'destroy'])->name('destroy');
+        Route::post('/send-email', [InterviewController::class, 'sendEmail'])->name('sendEmail');
     });
-
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 });
