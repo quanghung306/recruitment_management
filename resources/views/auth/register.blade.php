@@ -35,7 +35,7 @@
                     <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3 visually-hidden">
                     <label for="role" class="form-label">Vai trò</label>
                     <select name="role" class="form-select" id="role" required>
                         <option value="hr">HR</option>

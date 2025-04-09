@@ -15,12 +15,13 @@
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="card shadow-lg p-4 rounded" style="width: 400px;">
             <h2 class="text-center text-primary">Đăng Nhập</h2>
-
-            <!-- @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+            @if($errors->any())
+            <div class="alert alert-danger">
+                @foreach ($errors->all() as $error)
+                <div>{{ $error }}</div>
+                @endforeach
             </div>
-            @endif -->
+            @endif
 
             <form action="{{ route('login') }}" method="POST">
                 @csrf

@@ -17,6 +17,7 @@ return [
         'guard' => 'web',
         'passwords' => 'users',
     ],
+    'default_password' => env('DEFAULT_PASSWORD', 'Password123'),
 
     /*
     |--------------------------------------------------------------------------

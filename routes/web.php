@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\DashboardController;
@@ -44,5 +45,16 @@ Route::middleware('auth')->group(function () {
     });
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('index');
+        Route::get('/create', [AdminController::class, 'create'])->name('create');
+        Route::post('/', [AdminController::class, 'store'])->name('store');
+        Route::put('/admin/{user}', [AdminController::class, 'update'])->name('update');
+        Route::post('/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('reset');
+        Route::delete('/{user}', [AdminController::class, 'destroy'])->name('destroy');
+        Route::patch('/{user}/toggle-active', [AdminController::class, 'toggleActive'])->name('admin.toggle-active');
+
+    });
 
 });

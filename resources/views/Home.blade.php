@@ -71,30 +71,37 @@
             <hr class="my-4">
 
             <ul class="nav nav-pills flex-column mb-auto">
+                @if (isHR() || isAdmin())
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active text-dark bg-white' : 'text-white' }}">
                         <i class="fas fa-tachometer-alt me-2"></i>
                         Dashboard
                     </a>
                 </li>
+                @endif
+                @if (isHR() )
                 <li>
                     <a href="{{ route('candidates.index') }}" class="nav-link {{ request()->routeIs('candidates.*') ? 'active text-dark bg-white' : 'text-white' }}">
                         <i class="fas fa-users me-2"></i>
                         Candidate Management
                     </a>
                 </li>
+                @endif
+                @if (isHR())
                 <li>
                     <a href="{{ route('interviews.index') }}" class="nav-link {{ request()->routeIs('interviews.*') ? 'active text-dark bg-white' : 'text-white' }}">
                         <i class="fas fa-calendar-alt me-2"></i>
                         Interview Schedule
                     </a>
                 </li>
-                <!-- <li>
-                    <a href="#" class="nav-link text-white">
-                        <i class="fas fa-chart-bar me-2"></i>
-                        Report
+                @endif
+                @if (isAdmin())
+                <li>
+                    <a href="{{ route('admin.index') }}" class="nav-link {{ request()->routeIs('admin.*') ? 'active text-dark bg-white' : 'text-white' }}">
+                        <i class="fas fa-user-shield me-2"></i>
+                        Account Management
                     </a>
-                </li> -->
+                    @endif
             </ul>
         </div>
         <!-- Main Content -->
@@ -102,6 +109,7 @@
             @yield('content')
         </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @yield('scripts')
 </body>

@@ -15,7 +15,7 @@ class AuthService
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => $data['role'] ?? 'hr',
+            'role' => 'hr',
         ]);
 
         $token = $user->createToken('UserToken')->plainTextToken;
@@ -30,19 +30,30 @@ class AuthService
     {
         $user = User::where('email', $credentials['email'])->first();
 
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Thông tin đăng nhập không hợp lệ.'],
+        if (!$user) {
+            return redirect()->back()->withErrors([
+                'email' => 'Email không tồn tại.',
             ]);
         }
+
+        if (!$user->is_active) {
+            return redirect()->back()->withErrors([
+                'email' => 'Tài khoản đã bị khóa.',
+            ]);
+        }
+
+        if (!Hash::check($credentials['password'], $user->password)) {
+            return redirect()->back()->withErrors([
+                'email' => 'Mật khẩu không đúng.',
+            ]);
+        }
+
         auth()->login($user);
 
         $token = $user->createToken('UserToken')->plainTextToken;
-        logger()->info("User registered with token: " . $token);
-        return [
-            'token' => $token,
-            'message' => 'Đăng ký thành công. Bạn có thể đăng nhập ngay.'
-        ];
+        logger()->info("User logged in with token: " . $token);
+
+        return redirect()->route('dashboard')->with('success', 'Đăng nhập thành công!');
     }
 
     public function logout(User $user): bool

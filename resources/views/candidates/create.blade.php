@@ -20,7 +20,6 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
@@ -29,7 +28,6 @@
                     @enderror
                 </div>
             </div>
-
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="phone" class="form-label">Điện thoại</label>
@@ -38,7 +36,6 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-
                 <div class="col-md-6">
                     <label for="status" class="form-label">Trạng thái</label>
                     <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
@@ -55,15 +52,13 @@
 
             <div class="mb-3">
                 <label for="skills" class="form-label">Kỹ năng</label>
-                <select name="skills[]" id="skills" class="form-select" >
+                <select name="skills[]" id="skills" class="js-example-basic-multiple js-states form-control" id="id_label_multiple" multiple="multiple">
                     @foreach($skills as $skill)
                     <option value="{{ $skill->id }}" {{ in_array($skill->id, (array) old('skills', [])) ? 'selected' : '' }}>
                         {{ $skill->name }}
                     </option>
                     @endforeach
                 </select>
-
-
                 @error('skills')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -87,7 +82,6 @@
 @endsection
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>

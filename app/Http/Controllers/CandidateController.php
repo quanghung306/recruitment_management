@@ -52,7 +52,6 @@ class CandidateController extends Controller
             if ($request->wantsJson()) {
                 return response()->json($candidate->load('skills'), 201);
             }
-
             return redirect()->route('candidates.index')->with('success', 'Ứng viên đã được tạo thành công');
         } catch (\Exception $e) {
             logger()->error('Error creating candidate: ' . $e->getMessage());
