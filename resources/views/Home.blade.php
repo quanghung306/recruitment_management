@@ -78,8 +78,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('candidates.index') }}" class="nav-link {{ request()->routeIs('candidates.*') ? 'active text-dark bg-white' : 'text-white' }}"
-                    >
+                    <a href="{{ route('candidates.index') }}" class="nav-link {{ request()->routeIs('candidates.*') ? 'active text-dark bg-white' : 'text-white' }}">
                         <i class="fas fa-users me-2"></i>
                         Candidate Management
                     </a>
