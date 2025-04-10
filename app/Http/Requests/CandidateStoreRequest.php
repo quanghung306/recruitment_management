@@ -13,13 +13,14 @@ class CandidateStoreRequest extends FormRequest
 
     public function rules(): array
     {
-        
+
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:candidates,email',
             'phone' => 'required|string|max:20',
             'skills' => 'required|array',
             'status' => 'required|in:new,interviewed,hired,rejected',
+            'cv_path' => 'nullable|file|mimes:pdf,doc,docx',
             'user_id' => 'nullable|exists:users,id'
         ];
     }

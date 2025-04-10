@@ -14,12 +14,16 @@ use App\Mail\InterviewEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use App\Jobs\SendInterviewEmail;
+use App\Services\InterviewEmailService;
 
 class InterviewController extends Controller
 {
-    public function __construct(protected InterviewService $interviewService) {}
+    public function __construct(
+        protected InterviewService $interviewService,
+        protected InterviewEmailService $emailService
+    ) {}
 
-    public function showInterviewsForm(Request $request )
+    public function showInterviewsForm(Request $request)
     {
 
         $interviews = $this->interviewService->getAllInterview($request->all());
@@ -52,13 +56,14 @@ class InterviewController extends Controller
             // Xử lý nếu thiếu dữ liệu
             return back()->withErrors(['missing_data' => 'Dữ liệu không đầy đủ']);
         }
-
-        // Tạo mới phỏng vấn
-        $this->interviewService->create($data);
+        $interview = $this->interviewService->create($data);
+        if ($interview->interview_result === 'pending') {
+            $this->emailService->sendInvitationEmail($interview);
+        } elseif (in_array($interview->interview_result, ['pass', 'fail'])) {
+            $this->emailService->sendResultEmail($interview);
+        }
         return redirect()->route('interviews.index')->with('success', 'Tạo lịch phỏng vấn thành công!');
     }
-
-
     public function edit(Interview $interview)
     {
         $candidates = Candidate::all();
@@ -68,7 +73,14 @@ class InterviewController extends Controller
 
     public function update(UpdateInterviewRequest $request, Interview $interview)
     {
+
+        $data = $request->validated();
         $this->interviewService->update($interview, $request->validated());
+        $this->interviewService->update($interview, $data);
+
+        if (in_array($interview->interview_result, ['pass', 'fail'])) {
+            $this->emailService->sendResultEmail($interview);
+        }
         return redirect()->route('interviews.index')->with('success', 'Cập nhật lịch phỏng vấn thành công!');
     }
 

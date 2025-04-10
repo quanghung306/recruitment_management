@@ -53,6 +53,7 @@
                         <th>Skills</th>
                         <th>Status</th>
                         <th>Hr</th>
+                        <th>CV</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -86,6 +87,22 @@
                             Chưa có
                             @endif
                         </td>
+                        <td >
+                            @if (!empty($candidate->cv_path))
+                            <a href="{{ asset('storage/' . $candidate->cv_path) }}"
+                                target="_blank"
+                                class="btn btn-icon btn-outline-primary rounded-circle"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                title="Xem CV ứng viên">
+                                <i class="fa-solid fa-file-arrow-down fs-5"></i>
+                            </a>
+                            @else
+                            <span class="badge bg-secondary ">Chưa có CV</span>
+                            @endif
+                        </td>
+
+
                         <td class="text-center">
                             <div class="d-flex  gap-2">
                                 <a href="{{ route('candidates.edit', $candidate->id) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
@@ -119,14 +136,19 @@
 </div>
 @endsection
 
-@push('scripts')
+@section('scripts')
 <script>
-    // Khởi tạo select2 cho multiselect kỹ năng
     $(document).ready(function() {
+        // select2 cho kỹ năng
         $('#skills').select2({
             placeholder: "Chọn kỹ năng",
             allowClear: true
         });
+
+        // Khởi tạo tooltip Bootstrap 5
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(t => new bootstrap.Tooltip(t))
     });
 </script>
-@endpush
+@endsection
+

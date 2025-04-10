@@ -9,6 +9,7 @@ use App\Services\CandidateService;
 use Illuminate\Http\Request;
 use App\Models\Skill;
 use App\Models\User;
+use Exception;
 
 class CandidateController extends Controller
 {
@@ -58,7 +59,6 @@ class CandidateController extends Controller
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
-
     // Hiển thị form chỉnh sửa ứng viên
     public function updateCandidateForm(Candidate $candidate)
     {
@@ -81,12 +81,11 @@ class CandidateController extends Controller
             }
 
             return redirect()->route('candidates.index')
-                           ->with('success', 'Ứngng viên đã được cập nhật');
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+                           ->with('success', 'Ứng viên đã được cập nhật');
+        } catch (Exception $e) {
+            return back()->with(['error' => $e->getMessage()]);
         }
     }
-
     // Xóa ứng viên
     public function destroy(Candidate $candidate)
     {
@@ -96,7 +95,6 @@ class CandidateController extends Controller
             if (request()->wantsJson()) {
                 return response()->json(['message' => 'Xóa thành công']);
             }
-
             return redirect()->route('candidates.index')
                            ->with('success', 'Ứng viên đã được xóa');
         } catch (\Exception $e) {

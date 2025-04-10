@@ -10,7 +10,6 @@
     </div>
 
     <div class="card-body">
-        <!-- Bộ lọc (nếu có) -->
 
         <!-- Bảng danh sách -->
         <div class="table-responsive">
@@ -36,7 +35,7 @@
                         <td>{{ $interview->round }}</td>
                         <td>
                             @switch($interview->interview_result)
-                            @case('pass') <span class="badge bg-success ls-5">Đậu</span> @break
+                            @case('pass') <span class="badge bg-success fs-6">Đậu</span> @break
                             @case('fail') <span class="badge bg-danger fs-6 ">Rớt</span> @break
                             @case('pending') <span class="badge bg-warning text-dark fs-6">Đang chờ</span> @break
                             @default <span class="text-muted">-</span>
@@ -54,8 +53,6 @@
                                     title="Gửi email mời">
                                     <i class="fas fa-envelope"></i>
                                 </button>
-
-
                                 <a href="{{ route('interviews.edit', $interview->id) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -78,7 +75,6 @@
                 </tbody>
             </table>
         </div>
-
         <!-- Phân trang -->
         {{ $interviews->links() }}
     </div>

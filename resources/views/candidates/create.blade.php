@@ -64,6 +64,11 @@
                 @enderror
             </div>
             <div class="mb-3">
+                <label for="cv" class="form-label">CV (PDF/DOCX)</label>
+                <input type="file" name="cv" id="cv" class="form-control">
+            </div>
+
+            <div class="mb-3">
                 <label for="user_id" class="form-label">Người đã tuyển</label>
                 <select name="user_id" id="user_id" class="form-select">
                     <option value="">Chọn người đã tuyển</option>

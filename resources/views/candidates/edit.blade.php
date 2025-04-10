@@ -56,12 +56,12 @@
 
             <div class="mb-3">
                 <label for="skills" class="form-label">Kỹ năng</label>
-                <select name="skills[]" id="skills" class="js-example-basic-multiple js-states form-control" id="id_label_multiple" multiple="multiple" >
+                <select name="skills[]" id="skills" class="js-example-basic-multiple js-states form-control" id="id_label_multiple" multiple="multiple">
                     @foreach($skills as $skill)
-                    <option value="{{ $skill->id }}"{{ in_array($skill->id, old('skills', $candidate->skills->pluck('id')->toArray())) ? 'selected' : '' }}>
+                    <option value="{{ $skill->id }}" {{ in_array($skill->id, old('skills', $candidate->skills->pluck('id')->toArray())) ? 'selected' : '' }}>
                         {{ $skill->name }}
-                        </option>
-                        @endforeach
+                    </option>
+                    @endforeach
                 </select>
 
 
@@ -69,6 +69,21 @@
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+            <div class="mb-3">
+                <label for="cv_path" class="form-label">CV (PDF/DOCX)</label>
+                {{-- File input để upload mới --}}
+                <input type="file" name="cv_path" id="cv_path" class="form-control"
+                    accept=".pdf,.doc,.docx">
+                @if (!empty($candidate->cv_path))
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-file-earmark-text me-2 fs-4 text-primary"></i>
+                    <a href="{{ asset('storage/' . $candidate->cv_path) }}" target="_blank">
+                        Xem CV hiện tại
+                    </a>
+                </div>
+                @endif
+            </div>
+
 
             <div class="mb-3">
                 <label for="user_id" class="form-label">Người đã tuyển</label>
