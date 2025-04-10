@@ -6,8 +6,10 @@ use App\Http\Requests\AdminRequest;
 use App\Http\Requests\AdminUpdateRequest;
 use App\Models\User;
 use App\Services\AdminService;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
@@ -24,11 +26,8 @@ class AdminController extends Controller
     {
         try {
             $this->authorize('manage', User::class);
-            $users = $this->adminService->getAllHRs();
-            $admins = $this->adminService->getAllAdmins();
-
+            $users = $this->adminService->getAllHRs($request->all());
             return view('admin.index', [
-                'admins' => $admins,
                 'users' => $users,
                 'defaultPassword' => config('auth.default_password')
             ]);
@@ -52,14 +51,13 @@ class AdminController extends Controller
 
             return redirect()->route('admin.index')
                 ->with('success', 'Tạo hr thành công!');
-        } catch (\Throwable $th) {
-            Log::error('Error creating hr: ' . $th->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error creating hr: ' . $e->getMessage());
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Không thể tạo tài khoản hr.');
         }
     }
-
     public function update(AdminUpdateRequest $request, User $user): RedirectResponse
     {
         try {
@@ -67,8 +65,8 @@ class AdminController extends Controller
             $this->adminService->updateAdmin($user, $request->validated());
             return redirect()->route('admin.index')
                 ->with('success', 'Cập nhật thành công!');
-        } catch (\Throwable $th) {
-            Log::error('Error updating admin: ' . $th->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error updating admin: ' . $e->getMessage());
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Không thể cập nhật thông tin admin.');
@@ -81,10 +79,12 @@ class AdminController extends Controller
             $this->authorize('manage', $user);
             $this->adminService->resetPassword($user);
 
-            return back()->with('success', 'Đã reset mật khẩu thành công.');
-        } catch (\Throwable $th) {
-            Log::error('Error resetting password: ' . $th->getMessage());
-            return back()->with('error', 'Không thể reset mật khẩu.');
+            return redirect()->back()->with('success', 'Đã reset mật khẩu thành công.');
+        } catch (Exception $e) {
+            Log::error('Error resetting password: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -98,8 +98,8 @@ class AdminController extends Controller
                 $isActive
                     ? 'Tài khoản đã được kích hoạt'
                     : 'Tài khoản đã được vô hiệu hóa');
-        } catch (\Throwable $th) {
-            Log::error('Error toggling active status: ' . $th->getMessage());
+        } catch (Exception $e) {
+            logger()->error('Error toggling active status: ' . $e->getMessage());
             return back()->with('error', 'Không thể cập nhật trạng thái.');
         }
     }
@@ -111,9 +111,9 @@ class AdminController extends Controller
             $this->adminService->deleteAdmin($user);
 
             return redirect()->route('admin.index')
-                ->with('success', 'Xóa admin thành công!');
-        } catch (\Throwable $th) {
-            Log::error('Error deleting admin: ' . $th->getMessage());
+                ->with('success', 'Xóa  tài khoản hr thành công!');
+        } catch (Exception $e) {
+            Log::error('Error deleting admin: ' . $e->getMessage());
             return redirect()->back()
                 ->with('error', 'Không thể xóa admin.');
         }

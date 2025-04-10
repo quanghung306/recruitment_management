@@ -42,13 +42,18 @@ class AuthController extends Controller
     {
         return view('auth.login');
     }
-
     public function login(LoginRequest $request)
     {
-
-        $this->authService->login($request->validated());
-        Session()->flash('success', 'Đăng nhập thành công!');
-        return redirect()->route('dashboard');
+        try {
+            $user = $this->authService->login($request->validated());
+            if ($user) {
+                return redirect()->route('dashboard')->with('success', 'Đăng nhập thành công!');
+            }
+        } catch (Exception $e) {
+            return redirect()->back()->with([
+                'errors' => $e->getMessage()
+            ]);
+        }
     }
 
     public function logout(Request $request)
@@ -59,18 +64,14 @@ class AuthController extends Controller
             if (Auth::guard('web')->check()) {
                 Auth::guard('web')->logout();
             }
-
             // Sau đó xóa token API nếu có
             if ($request->user()) {
                 $this->authService->logout($request->user());
             }
-
             // Hủy session hiện tại
             $request->session()->invalidate();
-
             // Tạo lại token CSRF
             $request->session()->regenerateToken();
-
             // Chuyển hướng về trang login với thông báo
             return redirect()->route('login')->with('success', 'Đăng xuất thành công.');
         } catch (Exception $e) {

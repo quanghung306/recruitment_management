@@ -3,17 +3,12 @@
 namespace App\Services;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AdminService
 {
-    public function getAllAdmins()
-    {
-        return User::where('role', 'admin')->latest()->get();
-
-    }
-
     public function getAllHRs()
     {
         return User::where('role', 'hr')->latest()->get();
@@ -49,6 +44,7 @@ class AdminService
     {
         return DB::transaction(function () use ($user) {
             return $user->update([
+                logger()->info('Reset password for user: ' . $user->email),
                 'password' => Hash::make(config('auth.default_password')),
             ]);
         });
@@ -65,7 +61,20 @@ class AdminService
     public function deleteAdmin(User $user): bool
     {
         return DB::transaction(function () use ($user) {
-            return $user->delete();
+            try {
+                foreach ($user->candidates as $candidate) {
+
+                    $candidate->skills()->detach();
+
+                    $candidate->delete();
+                }
+                DB::commit();
+                return $user->delete();
+            } catch (Exception $e) {
+                DB::rollBack();
+                logger()->error('Error deleting admin: ' . $e->getMessage());
+                throw $e;
+            }
         });
     }
 }

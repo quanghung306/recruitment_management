@@ -8,7 +8,13 @@
         <h5>Danh sách tài khoản HR</h5>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal"> Thêm tài khoản</button>
     </div>
+    @if (session('errors'))
+    <div id="toast-errors" data-errors="{{ session('errors') }}"></div>
+    @endif
 
+    @if(session('success'))
+    <div id="toast-success" data-success="{{ session('success') }}"></div>
+    @endif
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-striped table-hover align-middle">
@@ -68,11 +74,40 @@
         </div>
         @include('admin.partials.modal-add-users')
         @foreach ($users as $user)
-            @include('admin.partials.modal-edit-users', ['user' => $user])
+        @include('admin.partials.modal-edit-users', ['user' => $user])
         @endforeach
         {{-- Nếu có phân trang --}}
         {{-- {{ $users->links() }} --}}
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const errorEl = document.getElementById('toast-errors');
+        if (errorEl) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: errorEl.dataset.errors,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        }
 
+        const successEl = document.getElementById('toast-success');
+        if (successEl) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: successEl.dataset.success,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

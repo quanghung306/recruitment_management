@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthService
 {
@@ -28,33 +28,38 @@ class AuthService
 
     public function login(array $credentials)
     {
-        $user = User::where('email', $credentials['email'])->first();
 
-        if (!$user) {
-            return redirect()->back()->withErrors([
-                'email' => 'Email không tồn tại.',
-            ]);
+        try {
+            $user = User::where('email', $credentials['email'])->first();
+
+            if (!$user) {
+                logger('User not found: ' . $credentials['email']);
+                 throw new Exception('Email không tồn tại.');
+            }
+
+            if (!$user->is_active) {
+                logger('Tài khoản đã bị khóa: ' . $credentials['email']);
+                throw new Exception('Tài khoản đã bị khóa.');
+            }
+
+            if (!Hash::check($credentials['password'], $user->password)) {
+                logger('Mật khẩu không đúng: ' . $credentials['password']);
+                throw new Exception('Mật khẩu không đúng.');
+            }
+
+            auth()->login($user);
+
+            $token = $user->createToken('UserToken')->plainTextToken;
+            logger()->info("User logged in with token: " . $token);
+
+
+            return redirect()->route('dashboard')->with('success', 'Đăng nhập thành công!');
+        } catch (Exception $e) {
+            logger()->error('Login failed: ' . $e->getMessage());
+            throw $e;
         }
-
-        if (!$user->is_active) {
-            return redirect()->back()->withErrors([
-                'email' => 'Tài khoản đã bị khóa.',
-            ]);
-        }
-
-        if (!Hash::check($credentials['password'], $user->password)) {
-            return redirect()->back()->withErrors([
-                'email' => 'Mật khẩu không đúng.',
-            ]);
-        }
-
-        auth()->login($user);
-
-        $token = $user->createToken('UserToken')->plainTextToken;
-        logger()->info("User logged in with token: " . $token);
-
-        return redirect()->route('dashboard')->with('success', 'Đăng nhập thành công!');
     }
+
 
     public function logout(User $user): bool
     {
