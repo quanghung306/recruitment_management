@@ -42,7 +42,7 @@
                         </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2 flex-wrap">
-                                <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editModal-{{ $user->id }}">
+                                <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editModal-{{ $user->id }} ">
                                     <i class="fas fa-edit"></i> Sửa
                                 </button>
 

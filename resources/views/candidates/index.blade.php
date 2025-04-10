@@ -68,14 +68,13 @@
                     <tr>
                         <td>{{ $loop->iteration + ($candidates->currentPage() - 1) * $candidates->perPage() }}</td>
                         <td>{{ $candidate->name }}</td>
-                        <td>{{ $candidate->email }}</td>
+                        <td >{{ $candidate->email }}</td>
                         <td>{{ $candidate->phone }}</td>
                         <td>
                             @foreach($candidate->skills as $skill)
                             <span>{{ $skill->name }}</span>
                             @endforeach
                         </td>
-
                         <td>
                             <span class="badge fs-6
                         @if($candidate->status == 'new') bg-info
@@ -124,7 +123,6 @@
                                 </form>
                             </div>
                         </td>
-
                     </tr>
                     @empty
                     <tr>

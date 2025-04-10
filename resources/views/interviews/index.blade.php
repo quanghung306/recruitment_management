@@ -44,7 +44,7 @@
                         <td class="text-center">
                             <div class="d-flex  gap-2">
                                 <button type="button"
-                                    class="btn btn-sm btn-outline-info send-email-btn"
+                                    class="btn btn-sm btn-outline-info send-email-btn visually-hidden"
                                     data-bs-toggle="modal"
                                     data-bs-target="#emailModal"
                                     data-interview-id="{{ $interview->id }}"
