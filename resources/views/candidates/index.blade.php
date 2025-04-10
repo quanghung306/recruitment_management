@@ -46,7 +46,6 @@
                 </div>
             </div>
         </form>
-
         <!-- Bảng danh sách -->
         <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -106,8 +105,6 @@
                             <span class="badge bg-secondary ">Chưa có CV</span>
                             @endif
                         </td>
-
-
                         <td class="text-center">
                             <div class="d-flex  gap-2">
                                 <a href="{{ route('candidates.edit', $candidate->id) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
@@ -133,13 +130,11 @@
 
             </table>
         </div>
-
         <!-- Phân trang -->
         {{ $candidates->links() }}
     </div>
 </div>
 @endsection
-
 @section('scripts')
 <script>
     $(document).ready(function() {
@@ -151,11 +146,9 @@
                 allowClear: true
             });
         }
-
         // Tooltip Bootstrap
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         tooltipTriggerList.forEach(t => new bootstrap.Tooltip(t));
-
         // SweetAlert2 Toast
         const errorEl = document.getElementById('toast-errors');
         if (errorEl && errorEl.dataset.errors) {
@@ -169,7 +162,6 @@
                 timerProgressBar: true,
             });
         }
-
         const successEl = document.getElementById('toast-success');
         if (successEl && successEl.dataset.success) {
             Swal.fire({
