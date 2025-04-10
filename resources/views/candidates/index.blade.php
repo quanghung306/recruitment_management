@@ -4,6 +4,12 @@
 
 @section('content')
 <div class="card">
+    @if (session('errors'))
+    <div id="toast-errors" data-errors="{{ session('errors') }}"></div>
+    @endif
+    @if(session('success'))
+    <div id="toast-success" data-success="{{ session('success') }}"></div>
+    @endif
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5>Danh sách ứng viên</h5>
         <a href="{{ route('candidates.create') }}" class="btn btn-primary">Thêm ứng viên</a>
@@ -87,7 +93,7 @@
                             Chưa có
                             @endif
                         </td>
-                        <td >
+                        <td>
                             @if (!empty($candidate->cv_path))
                             <a href="{{ asset('storage/' . $candidate->cv_path) }}"
                                 target="_blank"
@@ -139,16 +145,46 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
-        // select2 cho kỹ năng
-        $('#skills').select2({
-            placeholder: "Chọn kỹ năng",
-            allowClear: true
-        });
+        // Select2 kỹ năng
+        const skillsEl = $('#skills');
+        if (skillsEl.length) {
+            skillsEl.select2({
+                placeholder: "Chọn kỹ năng",
+                allowClear: true
+            });
+        }
 
-        // Khởi tạo tooltip Bootstrap 5
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        const tooltipList = [...tooltipTriggerList].map(t => new bootstrap.Tooltip(t))
+        // Tooltip Bootstrap
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipTriggerList.forEach(t => new bootstrap.Tooltip(t));
+
+        // SweetAlert2 Toast
+        const errorEl = document.getElementById('toast-errors');
+        if (errorEl && errorEl.dataset.errors) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: errorEl.dataset.errors,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        }
+
+        const successEl = document.getElementById('toast-success');
+        if (successEl && successEl.dataset.success) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: successEl.dataset.success,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        }
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
-

@@ -47,7 +47,7 @@ class CandidateService
             $skills = Arr::pull($data, 'skills', []);
             $candidate = Candidate::create($data);
 
-            if (!empty($skills)) {  
+            if (!empty($skills)) {
                 $candidate->skills()->sync($skills);
             }
             if (request()->hasFile('cv')) {
@@ -87,7 +87,6 @@ class CandidateService
                     'data' => $data,
                     'cv_path' => $data['cv_path'] ?? null,
                 ]);
-
                 return $candidate->load('skills');
             });
         } catch (Exception $e) {

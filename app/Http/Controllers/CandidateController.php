@@ -71,19 +71,10 @@ class CandidateController extends Controller
     public function update(CandidateUpdateRequest $request, Candidate $candidate)
     {
         try {
-            $updatedCandidate = $this->candidateService->updateCandidate(
-                $candidate,
-                $request->validated()
-            );
-
-            if ($request->wantsJson()) {
-                return response()->json($updatedCandidate->load('skills'));
-            }
-
-            return redirect()->route('candidates.index')
-                           ->with('success', 'Ứng viên đã được cập nhật');
+         $this->candidateService->updateCandidate($candidate,$request->validated());
+            return redirect()->route('candidates.index')->with('success', 'Ứng viên đã được cập nhật');
         } catch (Exception $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            return redirect()-> back()->with(['error' => $e->getMessage()]);
         }
     }
     // Xóa ứng viên
