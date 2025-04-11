@@ -49,21 +49,28 @@ class InterviewController extends Controller
     }
 
     public function store(StoreInterviewRequest $request)
-    {
-        // Kiểm tra xem có dữ liệu hợp lệ không trước khi tạo
-        $data = $request->validated();
-        if (!isset($data['candidate_id']) || !isset($data['interviewer_id'])) {
-            // Xử lý nếu thiếu dữ liệu
-            return back()->withErrors(['missing_data' => 'Dữ liệu không đầy đủ']);
-        }
-        $interview = $this->interviewService->create($data);
-        if ($interview->interview_result === 'pending') {
-            $this->emailService->sendInvitationEmail($interview);
-        } elseif (in_array($interview->interview_result, ['pass', 'fail'])) {
-            $this->emailService->sendResultEmail($interview);
-        }
-        return redirect()->route('interviews.index')->with('success', 'Tạo lịch phỏng vấn thành công!');
+{
+    $data = $request->validated();
+
+    if (empty($data['candidate_id']) || empty($data['interviewer_id'])) {
+        return back()->withErrors(['missing_data' => 'Dữ liệu không đầy đủ']);
     }
+
+    $interview = $this->interviewService->create($data);
+
+    session()->flash('success', 'Tạo lịch phỏng vấn thành công!');
+
+    if ($interview->interview_result === 'pending') {
+        $this->emailService->sendInvitationEmail($interview);
+        session()->flash('info', 'Đã gửi email mời phỏng vấn!');
+    } elseif (in_array($interview->interview_result, ['pass', 'fail'])) {
+        $this->emailService->sendResultEmail($interview);
+        session()->flash('info', 'Đã gửi email kết quả phỏng vấn!');
+    }
+
+    return redirect()->route('interviews.index');
+}
+
     public function edit(Interview $interview)
     {
         $candidates = Candidate::all();
@@ -77,11 +84,12 @@ class InterviewController extends Controller
         $data = $request->validated();
         $this->interviewService->update($interview, $request->validated());
         $this->interviewService->update($interview, $data);
-
+        session()->flash('success', 'Cập nhật lịch phỏng vấn thành công !');
         if (in_array($interview->interview_result, ['pass', 'fail'])) {
             $this->emailService->sendResultEmail($interview);
+            session()->flash('info', 'Đã gửi email kết quả phỏng vấn !');
         }
-        return redirect()->route('interviews.index')->with('success', 'Cập nhật lịch phỏng vấn thành công!');
+        return redirect()->route('interviews.index');
     }
 
     public function destroy(Interview $interview)

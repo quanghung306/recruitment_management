@@ -8,6 +8,16 @@
         <h5>Danh sách lịch phỏng vấn</h5>
         <a href="{{ route('interviews.create') }}" class="btn btn-primary">Thêm lịch phỏng vấn</a>
     </div>
+    @if (session('errors'))
+    <div id="toast-errors" data-errors="{{ session('errors') }}"></div>
+    @endif
+
+    @if (session('success'))
+    <div id="toast-success" data-success="{{ session('success') }}"></div>
+    @endif
+    @if(session('info'))
+    <div id="toast-info" data-info="{{ session('info') }}"></div>
+    @endif
 
     <div class="card-body">
 
@@ -57,10 +67,10 @@
                                     <i class="fas fa-edit"></i>
                                 </a>
 
-                                <form action="{{ route('interviews.destroy', $interview->id) }}" method="POST" class="d-inline">
+                                <form action="{{ route('interviews.destroy', $interview->id) }}" method="POST" class="d-inline delete-form">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa" onclick="return confirm('Bạn chắc chắn muốn xóa lịch phỏng vấn này?')">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>
@@ -83,7 +93,7 @@
 @include('interviews.partials.email_modal')
 @endsection
 @section('scripts')
-<script>
+<!-- {{--<script>
     document.addEventListener('DOMContentLoaded', function () {
     const emailModal = document.getElementById('emailModal');
 
@@ -102,6 +112,81 @@
     });
 });
 
+</script>--}} -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        // Select2
+        $('#skills').select2({
+            placeholder: "Chọn kỹ năng",
+            allowClear: true
+        });
+
+        // Tooltip Bootstrap
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipTriggerList.forEach(t => new bootstrap.Tooltip(t));
+
+        // SweetAlert2: Delete confirm
+        $('.delete-form').on('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Ứng viên sẽ bị xóa và không thể khôi phục!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+
+        // SweetAlert2: Toast
+        const errorEl = document.getElementById('toast-errors');
+        if (errorEl?.dataset.errors) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: errorEl.dataset.errors,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        }
+
+        const successEl = document.getElementById('toast-success');
+        const infoEl = document.getElementById('toast-info');
+        if (successEl?.dataset.success) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: successEl.dataset.success,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+            }).then(() => {
+                if (infoEl?.dataset.info) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'info',
+                        title: infoEl.dataset.info,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                }
+            });
+        }
+
+    });
 </script>
 @endsection
-
