@@ -11,7 +11,6 @@
     @if (session('success'))
         <div id="toast-success" data-success="{{ session('success') }}"></div>
     @endif
-
     <div class="card-header d-flex bd-highlight gap-2 align-items-center">
         <div class="me-auto p-2 bd-highlight">
             <h5>Danh sách ứng viên</h5>
@@ -36,7 +35,7 @@
 
                 <div class="col-md-4">
                     <label for="skills" class="form-label">Kỹ năng</label>
-                    <select name="skills[]" id="skills" class="form-select">
+                    <select name="skills[]" id="skills" class="js-example-basic-multiple js-states form-control p-3" id="id_label_multiple" multiple="multiple">
                         @foreach($skills as $skill)
                             <option value="{{ $skill->id }}" {{ in_array($skill->id, request('skills', [])) ? 'selected' : '' }}>
                                 {{ $skill->name }}
@@ -133,6 +132,7 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function () {

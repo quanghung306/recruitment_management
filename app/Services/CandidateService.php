@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Finder\Gitignore;
 
 class CandidateService
 {
@@ -107,3 +108,4 @@ class CandidateService
         });
     }
 }
+
