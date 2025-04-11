@@ -99,6 +99,9 @@ class CandidateService
     public function deleteCandidate(Candidate $candidate)
     {
         return DB::transaction(function () use ($candidate) {
+            if ($candidate->cv_path && Storage::disk('public')->exists($candidate->cv_path)) {
+                Storage::disk('public')->delete($candidate->cv_path);
+            }
             $candidate->skills()->detach();
             return $candidate->delete();
         });
