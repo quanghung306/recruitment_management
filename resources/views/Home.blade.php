@@ -18,7 +18,6 @@
             background: #f8f9fa;
             padding: 1rem;
         }
-
         .content-wrapper {
             margin-left: 280px;
             flex-grow: 1;
@@ -81,7 +80,7 @@
                     </a>
                 </li>
                 @endif
-                @if (isHR() )
+                @if (isHR() || isAdmin())
                 <li>
                     <a href="{{ route('candidates.index') }}" class="nav-link {{ request()->routeIs('candidates.*') ? 'active text-dark bg-white' : 'text-white' }}">
                         <i class="fas fa-users me-2"></i>
@@ -114,7 +113,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     @yield('scripts')
 </body>
 

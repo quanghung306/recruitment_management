@@ -21,17 +21,17 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Tên</th>
+                        <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th>Trạng thái</th>
-                        <th class="text-center">Hành động</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($users as $index => $user)
+                    @forelse ($users as $user)
                     <tr>
-                        <td>{{ $index + 1 }}</td>
+                    <td>{{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td><span class="badge bg-info">{{ ucfirst($user->role) }}</span></td>

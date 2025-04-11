@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\Skill;
 use App\Models\User;
 use Exception;
+use App\Exports\CandidatesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CandidateController extends Controller
 {
@@ -71,10 +73,10 @@ class CandidateController extends Controller
     public function update(CandidateUpdateRequest $request, Candidate $candidate)
     {
         try {
-         $this->candidateService->updateCandidate($candidate,$request->validated());
+            $this->candidateService->updateCandidate($candidate, $request->validated());
             return redirect()->route('candidates.index')->with('success', 'Ứng viên đã được cập nhật');
         } catch (Exception $e) {
-            return redirect()-> back()->with(['error' => $e->getMessage()]);
+            return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
     // Xóa ứng viên
@@ -87,9 +89,13 @@ class CandidateController extends Controller
                 return response()->json(['message' => 'Xóa thành công']);
             }
             return redirect()->route('candidates.index')
-                           ->with('success', 'Ứng viên đã được xóa');
+                ->with('success', 'Ứng viên đã được xóa');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
+    }
+    public function exportCsv()
+    {
+        return Excel::download(new CandidatesExport, 'danh_sach_ung_vien.csv');
     }
 }

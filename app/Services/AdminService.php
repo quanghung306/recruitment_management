@@ -11,7 +11,7 @@ class AdminService
 {
     public function getAllHRs()
     {
-        return User::where('role', 'hr')->latest()->get();
+        return User::where('role', 'hr')->latest()->paginate(config('app.paginate', 5));
     }
 
     public function createHr(array $data): User

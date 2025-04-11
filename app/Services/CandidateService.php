@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Candidate;
 use Exception;
-use Illuminate\Log\Logger;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
