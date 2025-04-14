@@ -11,7 +11,7 @@ class CandidatesExport implements FromCollection, WithHeadings
 {
     public function collection()
     {
-
+        
         return Candidate::select('id', 'name', 'email', 'phone', 'status', 'cv_path')
             ->get()
             ->map(function ($candidate) {

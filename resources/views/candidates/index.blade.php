@@ -16,7 +16,8 @@
             <h5>Danh sách ứng viên</h5>
         </div>
         <a href="{{ route('candidates.create') }}" class="btn btn-primary">Thêm ứng viên</a>
-        <a href="#" id="exportCsvBtn" class="btn btn-success">Xuất CSV</a>
+        <a href="#" id="exportCsvBtn" class="btn btn-success">Export CSV</a>
+        <a href="#" id="importCsvBtn" class="btn btn-danger">Import CSV</a>
     </div>
     <div class="card-body">
         <!-- Bộ lọc -->
@@ -57,14 +58,14 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Tên</th>
+                        <th>Name</th>
                         <th>Email</th>
-                        <th>Số điện thoại</th>
-                        <th>Kỹ năng</th>
-                        <th>Trạng thái</th>
+                        <th>Phone</th>
+                        <th>Skills</th>
+                        <th>Status</th>
                         <th>HR</th>
                         <th>CV</th>
-                        <th>Hành động</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -205,6 +206,34 @@
                     Swal.fire({
                         title: 'Đang tải...',
                         text: 'File CSV sẽ được tải về trong giây lát.',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+        // SweetAlert2: Improt CSV
+        $('#importCsvBtn').on('click', function (e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'đẩy danh sách ứng viên',
+                text: "Bạn có chắc chắn muốn đẩy danh sách ứng viên lên không?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const link = document.createElement('a');
+                    link.href = "#";
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    Swal.fire({
+                        title: 'Đang tải...',
+                        text: 'File CSV sẽ được đẩy lên trong giây lát.',
                         icon: 'success',
                         timer: 1500,
                         showConfirmButton: false

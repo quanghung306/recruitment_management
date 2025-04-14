@@ -31,8 +31,8 @@ class AdminController extends Controller
                 'users' => $users,
                 'defaultPassword' => config('auth.default_password')
             ]);
-        } catch (\Throwable $th) {
-            Log::error('Error fetching accounts: ' . $th->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error fetching accounts: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Không thể tải danh sách tài khoản.');
         }
     }
@@ -72,7 +72,6 @@ class AdminController extends Controller
                 ->with('error', 'Không thể cập nhật thông tin admin.');
         }
     }
-
     public function resetPassword(User $user): RedirectResponse
     {
         try {
@@ -87,7 +86,6 @@ class AdminController extends Controller
             ]);
         }
     }
-
     public function toggleActive(User $user): RedirectResponse
     {
         try {
@@ -109,7 +107,6 @@ class AdminController extends Controller
         try {
             $this->authorize('manage', User::class);
             $this->adminService->deleteAdmin($user);
-
             return redirect()->route('admin.index')
                 ->with('success', 'Xóa  tài khoản hr thành công!');
         } catch (Exception $e) {
