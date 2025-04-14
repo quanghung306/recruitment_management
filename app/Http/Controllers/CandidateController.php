@@ -11,6 +11,7 @@ use App\Models\Skill;
 use App\Models\User;
 use Exception;
 use App\Exports\CandidatesExport;
+use App\Imports\CandidatesImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CandidateController extends Controller
@@ -97,5 +98,16 @@ class CandidateController extends Controller
     public function exportCsv()
     {
         return Excel::download(new CandidatesExport, 'danh_sach_ung_vien.csv');
+    }
+    public function importCsv(Request $request)
+    {
+        try {
+            Excel::import(new CandidatesImport, $request->file('csv_file'));
+
+            return redirect()->route('candidates.index')->with('success', 'Import CSV thành công.');
+        } catch (\Exception $e) {
+            logger()->error('Import CSV failed: ' . $e->getMessage());
+            return back()->withErrors(['errors' => 'Lỗi khi import CSV: ' . $e->getMessage()]);
+        }
     }
 }

@@ -91,7 +91,9 @@
 
 </div>
 @include('interviews.partials.email_modal')
+
 @endsection
+
 @section('scripts')
 <!-- {{--<script>
     document.addEventListener('DOMContentLoaded', function () {

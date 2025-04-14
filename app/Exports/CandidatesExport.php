@@ -11,12 +11,11 @@ class CandidatesExport implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        
+
         return Candidate::select('id', 'name', 'email', 'phone', 'status', 'cv_path')
             ->get()
             ->map(function ($candidate) {
                 return [
-                    'id' => $candidate->id,
                     'name' => $candidate->name,
                     'email' => $candidate->email,
                     'phone' => $candidate->phone,
@@ -29,6 +28,6 @@ class CandidatesExport implements FromCollection, WithHeadings
     }
     public function headings(): array
     {
-        return ['Id', 'Name', 'Email', 'Phone', 'Status', 'Cv_path'];
+        return ['Name', 'Email', 'Phone', 'Status', 'Cv_path'];
     }
 }
