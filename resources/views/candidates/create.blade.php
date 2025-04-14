@@ -4,10 +4,12 @@
 
 @section('content')
 <div class="card">
+    @if (session('errors'))
+    <div id="toast-errors" data-errors="{{ json_encode($errors)}}"></div>
+    @endif
     <div class="card-header">
         <h5>Thêm ứng viên mới</h5>
     </div>
-
     <div class="card-body">
         <form action="{{ route('candidates.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -15,38 +17,36 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="name" class="form-label">Họ và tên</label>
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}">
-                    @error('name')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
                 </div>
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
-                    @error('email')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <input type="email" class="form-control " id="email" name="email" value="{{ old('email') }}">
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="phone" class="form-label">Điện thoại</label>
-                    <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}">
-                    @error('phone')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <input
+                        type="text"
+                        class="form-control "
+                        id="phone"
+                        name="phone"
+                        value="{{ old('phone') }}"
+                        pattern="[0-9]{1,20}"
+                        title="Chỉ được nhập số từ 8 đến 20 ký tự"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+
                 </div>
                 <div class="col-md-6">
                     <label for="status" class="form-label">Trạng thái</label>
-                    <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
+                    <select class="form-select " id="status" name="status">
                         <option value="new" {{ old('status') == 'new' ? 'selected' : '' }}>Mới</option>
                         <option value="interviewed" {{ old('status') == 'interviewed' ? 'selected' : '' }}>Đã phỏng vấn</option>
                         <option value="hired" {{ old('status') == 'hired' ? 'selected' : '' }}>Đã tuyển</option>
                         <option value="rejected" {{ old('status') == 'rejected' ? 'selected' : '' }}>Từ chối</option>
                     </select>
-                    @error('status')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+
                 </div>
             </div>
 
@@ -59,9 +59,6 @@
                     </option>
                     @endforeach
                 </select>
-                @error('skills')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
             </div>
             <div class="mb-3">
                 <label for="cv" class="form-label">CV (PDF/DOCX)</label>
@@ -86,15 +83,33 @@
 </div>
 @endsection
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
         $('#skills').select2({
             placeholder: "Chọn kỹ năng",
             allowClear: true
         });
+        const errorEl = document.getElementById('toast-errors');
+        if (errorEl?.dataset.errors) {
+            try {
+                const errors = JSON.parse(errorEl.dataset.errors);
+                errors.forEach(error => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: error,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                });
+            } catch (e) {
+                console.error('Error parsing errors:', e);
+            }
+        }
     });
 </script>
 

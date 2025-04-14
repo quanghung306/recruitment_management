@@ -13,6 +13,7 @@ use App\Imports\CandidatesImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class CandidateController extends Controller
 {
@@ -33,11 +34,11 @@ class CandidateController extends Controller
         ]);
     }
 
-    // API: Return candidate list (JSON)
-    public function index(Request $request)
-    {
-        return response()->json($this->candidateService->getAllCandidates($request->all()));
-    }
+    // // API: Return candidate list (JSON)
+    // public function index(Request $request)
+    // {
+    //     return response()->json($this->candidateService->getAllCandidates($request->all()));
+    // }
 
     // Display create candidate form
     public function createCandidateForm()
@@ -51,20 +52,14 @@ class CandidateController extends Controller
     // Store new candidate
     public function store(CandidateStoreRequest $request)
     {
-        try {
-            $candidate = $this->candidateService->createCandidate($request->validated());
-            return $request->wantsJson()
-                ? response()->json($candidate->load('skills'), 201)
-                : redirect()->route('candidates.index')->with('success', 'Ứng viên đã được tạo thành công');
-        } catch (Exception $e) {
-            logger()->error('Error creating candidate: ' . $e->getMessage());
-            return back()->withErrors(['error' => $e->getMessage()]);
-        }
+        $this->candidateService->createCandidate($request->validated());
+        return redirect()->route('candidates.index')
+            ->with('success', 'Ứng viên tạo thành công');
     }
-
     // Display edit candidate form
     public function updateCandidateForm(Candidate $candidate)
     {
+
         return view('candidates.edit', [
             'candidate' => $candidate,
             'skills' => Skill::all(),
@@ -79,7 +74,7 @@ class CandidateController extends Controller
             $this->candidateService->updateCandidate($candidate, $request->validated());
             return redirect()->route('candidates.index')->with('success', 'Ứng viên đã được cập nhật');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->with(['errors' => $e->getMessage()]);
         }
     }
 

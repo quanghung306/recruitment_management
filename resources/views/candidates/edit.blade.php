@@ -4,6 +4,13 @@
 
 @section('content')
 <div class="card">
+    @if ($errors->any())
+    <div id="toast-errors" data-errors="{{ $errors->first('message') }}"></div>
+    @endif
+
+    @if (session('success'))
+    <div id="toast-success" data-success="{{ session('success') }}"></div>
+    @endif
     <div class="card-header">
         <h5>Chỉnh sửa ứng viên</h5>
     </div>
@@ -34,7 +41,14 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="phone" class="form-label">Điện thoại</label>
-                    <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $candidate->phone) }}">
+                    <input
+                        type="text" p
+                        class="form-control @error('phone') is-invalid @enderror"
+                        id="phone"
+                        name="phone"
+                        attern="[0-9]{8,20}"
+                        value="{{ old('phone', $candidate->phone) }}"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     @error('phone')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -114,6 +128,23 @@
             placeholder: "Chọn kỹ năng",
             allowClear: true
         });
+        const showToast = (type, message) => {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: type,
+                title: message,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        };
+
+        const errorEl = $('#toast-errors').data('errors');
+        if (errorEl) showToast('error', errorEl);
+
+        const successEl = $('#toast-success').data('success');
+        if (successEl) showToast('success', successEl);
     });
 </script>
 

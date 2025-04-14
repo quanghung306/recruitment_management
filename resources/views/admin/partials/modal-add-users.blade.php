@@ -1,4 +1,3 @@
-<!-- Modal Thêm tài khoản -->
 <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form action="{{ route('admin.store') }}" method="POST">
@@ -21,11 +20,12 @@
                         <label class="form-label">Mật khẩu</label>
                         <input type="password" name="password" class="form-control" required>
                     </div>
+
                     <div class="mb-3">
-                        <label for="is_active-{{ $user->id }}" class="form-label">Trạng thái</label>
-                        <select name="is_active" id="is_active-{{ $user->id }}" class="form-select" required>
-                            <option value="1" {{ $user->is_active ? 'selected' : '' }}>Hoạt động</option>
-                            <option value="0" {{ !$user->is_active ? 'selected' : '' }}>Ngưng</option>
+                        <label for="is_active" class="form-label">Trạng thái</label>
+                        <select name="is_active" id="is_active" class="form-select" required>
+                            <option value="1">Hoạt động</option>
+                            <option value="0">Ngưng</option>
                         </select>
                     </div>
                 </div>

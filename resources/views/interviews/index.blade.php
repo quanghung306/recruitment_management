@@ -90,7 +90,7 @@
     </div>
 
 </div>
-@include('interviews.partials.email_modal')
+@include('interviews.partials.email-modal')
 
 @endsection
 

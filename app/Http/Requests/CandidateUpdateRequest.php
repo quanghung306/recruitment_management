@@ -16,7 +16,7 @@ class CandidateUpdateRequest extends FormRequest
         return [
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|email|unique:candidates,email,' . $this->route('candidate')->id,
-            'phone' => 'sometimes|required|string|max:20',
+            'phone' => 'sometimes|required|digits_between:1,20',
             'skills' => 'sometimes|required|array',
             'status' => 'required|in:new,interviewed,hired,rejected',
             'cv_path' => 'sometimes|nullable|file|mimes:pdf,doc,docx',
