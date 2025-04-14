@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CandidateStoreRequest;
 use App\Http\Requests\CandidateUpdateRequest;
 use App\Models\Candidate;
-use App\Services\CandidateService;
-use Illuminate\Http\Request;
 use App\Models\Skill;
 use App\Models\User;
-use Exception;
+use App\Services\CandidateService;
 use App\Exports\CandidatesExport;
 use App\Imports\CandidatesImport;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Exception;
 
 class CandidateController extends Controller
 {
@@ -23,91 +23,94 @@ class CandidateController extends Controller
         $this->candidateService = $candidateService;
     }
 
-    // Hiển thị danh sách ứng viên (view)
+    // Display candidate list (view)
     public function showCandidateForm(Request $request)
     {
-        $users = User::all();
-        $skills = Skill::all();
-        $candidates = $this->candidateService->getAllCandidates($request->all());
-
-        return view('candidates.index', compact('candidates', 'skills', 'users'));
+        return view('candidates.index', [
+            'candidates' => $this->candidateService->getAllCandidates($request->all()),
+            'skills' => Skill::all(),
+            'users' => User::all(),
+        ]);
     }
 
-    // API trả về danh sách ứng viên (JSON)
+    // API: Return candidate list (JSON)
     public function index(Request $request)
     {
-        $candidates = $this->candidateService->getAllCandidates($request->all());
-        return response()->json($candidates);
+        return response()->json($this->candidateService->getAllCandidates($request->all()));
     }
 
-    // Hiển thị form tạo ứng viên
+    // Display create candidate form
     public function createCandidateForm()
     {
-        $skills = Skill::all();
-        $users = User::all();
-        return view('candidates.create', compact('skills', 'users'));
+        return view('candidates.create', [
+            'skills' => Skill::all(),
+            'users' => User::all(),
+        ]);
     }
 
-    // Lưu ứng viên mới
+    // Store new candidate
     public function store(CandidateStoreRequest $request)
     {
         try {
             $candidate = $this->candidateService->createCandidate($request->validated());
-            if ($request->wantsJson()) {
-                return response()->json($candidate->load('skills'), 201);
-            }
-            return redirect()->route('candidates.index')->with('success', 'Ứng viên đã được tạo thành công');
-        } catch (\Exception $e) {
+            return $request->wantsJson()
+                ? response()->json($candidate->load('skills'), 201)
+                : redirect()->route('candidates.index')->with('success', 'Ứng viên đã được tạo thành công');
+        } catch (Exception $e) {
             logger()->error('Error creating candidate: ' . $e->getMessage());
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
-    // Hiển thị form chỉnh sửa ứng viên
+
+    // Display edit candidate form
     public function updateCandidateForm(Candidate $candidate)
     {
-        $skills = Skill::all();
-        $users = User::all();
-        return view('candidates.edit', compact('candidate', 'skills', 'users'));
+        return view('candidates.edit', [
+            'candidate' => $candidate,
+            'skills' => Skill::all(),
+            'users' => User::all(),
+        ]);
     }
 
-    // Cập nhật ứng viên
+    // Update candidate
     public function update(CandidateUpdateRequest $request, Candidate $candidate)
     {
         try {
             $this->candidateService->updateCandidate($candidate, $request->validated());
             return redirect()->route('candidates.index')->with('success', 'Ứng viên đã được cập nhật');
         } catch (Exception $e) {
-            return redirect()->back()->with(['error' => $e->getMessage()]);
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
-    // Xóa ứng viên
+
+    // Delete candidate
     public function destroy(Candidate $candidate)
     {
         try {
             $this->candidateService->deleteCandidate($candidate);
-
-            if (request()->wantsJson()) {
-                return response()->json(['message' => 'Xóa thành công']);
-            }
-            return redirect()->route('candidates.index')
-                ->with('success', 'Ứng viên đã được xóa');
-        } catch (\Exception $e) {
+            return request()->wantsJson()
+                ? response()->json(['message' => 'Xóa thành công'])
+                : redirect()->route('candidates.index')->with('success', 'Ứng viên đã được xóa');
+        } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
+    // Export candidates to CSV
     public function exportCsv()
     {
         return Excel::download(new CandidatesExport, 'danh_sach_ung_vien.csv');
     }
+
+    // Import candidates from CSV
     public function importCsv(Request $request)
     {
         try {
             Excel::import(new CandidatesImport, $request->file('csv_file'));
-
             return redirect()->route('candidates.index')->with('success', 'Import CSV thành công.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error('Import CSV failed: ' . $e->getMessage());
-            return back()->withErrors(['errors' => 'Lỗi khi import CSV: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => 'Lỗi khi import CSV: ' . $e->getMessage()]);
         }
     }
 }

@@ -11,14 +11,14 @@
     @if (session('success'))
     <div id="toast-success" data-success="{{ session('success') }}"></div>
     @endif
+
     <div class="card-header d-flex bd-highlight gap-2 align-items-center">
-        <div class="me-auto p-2 bd-highlight">
-            <h5>Danh sách ứng viên</h5>
-        </div>
+        <h5 class="me-auto p-2 bd-highlight">Danh sách ứng viên</h5>
         <a href="{{ route('candidates.create') }}" class="btn btn-primary">Thêm ứng viên</a>
-        <a href="#" id="exportCsvBtn" class="btn btn-success">Export CSV</a>
-        <a href="#" id="importCsvBtn" class="btn btn-danger">Import CSV</a>
+        <button id="exportCsvBtn" class="btn btn-success">Export CSV</button>
+        <button id="importCsvBtn" class="btn btn-danger">Import CSV</button>
     </div>
+
     <div class="card-body">
         <!-- Bộ lọc -->
         <form method="GET" class="mb-4">
@@ -27,16 +27,15 @@
                     <label for="status" class="form-label">Trạng thái</label>
                     <select name="status" id="status" class="form-select">
                         <option value="">Tất cả</option>
-                        <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>Mới</option>
-                        <option value="interviewed" {{ request('status') == 'interviewed' ? 'selected' : '' }}>Đã phỏng vấn</option>
-                        <option value="hired" {{ request('status') == 'hired' ? 'selected' : '' }}>Đã tuyển</option>
-                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Từ chối</option>
+                        @foreach(['new' => 'Mới', 'interviewed' => 'Đã phỏng vấn', 'hired' => 'Đã tuyển', 'rejected' => 'Từ chối'] as $key => $value)
+                        <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                        @endforeach
                     </select>
                 </div>
 
                 <div class="col-md-4">
                     <label for="skills" class="form-label">Kỹ năng</label>
-                    <select name="skills[]" id="skills" class="js-example-basic-multiple js-states form-control p-3" id="id_label_multiple" multiple="multiple">
+                    <select name="skills[]" id="skills" class="form-control js-example-basic-multiple" multiple>
                         @foreach($skills as $skill)
                         <option value="{{ $skill->id }}" {{ in_array($skill->id, request('skills', [])) ? 'selected' : '' }}>
                             {{ $skill->name }}
@@ -76,26 +75,21 @@
                         <td>{{ $candidate->email }}</td>
                         <td>{{ $candidate->phone }}</td>
                         <td>
-                            @foreach($candidate->skills as $skill)
+                            @forelse($candidate->skills as $skill)
                             <span>{{ $skill->name }}</span>
-                            @endforeach
+                            @empty
+                            <span class="badge bg-secondary">Chưa có kỹ năng</span>
+                            @endforelse
                         </td>
                         <td>
-                            <span class="badge fs-6
-                                    @if($candidate->status == 'new') bg-info
-                                    @elseif($candidate->status == 'interviewed') bg-warning
-                                    @elseif($candidate->status == 'hired') bg-success
-                                    @else bg-danger
-                                    @endif">
+                            <span class="badge fs-6 bg-{{ ['new' => 'info', 'interviewed' => 'warning', 'hired' => 'success', 'rejected' => 'danger'][$candidate->status] ?? 'secondary' }}">
                                 {{ ucfirst($candidate->status) }}
                             </span>
                         </td>
-                        <td>{{ $candidate->user->name ?? 'Chưa có' }}</td>
+                        <td>{{ $candidate->user->name ?? 'Chưa có HR' }}</td>
                         <td>
                             @if ($candidate->cv_path)
-                            <a href="{{ asset('storage/' . $candidate->cv_path) }}" target="_blank"
-                                class="btn btn-icon btn-outline-primary rounded-circle"
-                                data-bs-toggle="tooltip" title="Xem CV ứng viên">
+                            <a href="{{ asset('storage/' . $candidate->cv_path) }}" target="_blank" class="btn btn-icon btn-outline-primary rounded-circle" data-bs-toggle="tooltip" title="Xem CV ứng viên">
                                 <i class="fa-solid fa-file-arrow-down fs-5"></i>
                             </a>
                             @else
@@ -104,12 +98,10 @@
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2">
-                                <a href="{{ route('candidates.edit', $candidate->id) }}"
-                                    class="btn btn-sm btn-outline-primary" title="Sửa">
+                                <a href="{{ route('candidates.edit', $candidate->id) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('candidates.destroy', $candidate->id) }}"
-                                    method="POST" class="d-inline delete-form">
+                                <form action="{{ route('candidates.destroy', $candidate->id) }}" method="POST" class="d-inline delete-form">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
@@ -132,6 +124,7 @@
         {{ $candidates->links() }}
     </div>
 </div>
+
 <!-- Modal Import CSV -->
 <div class="modal fade" id="importCsvModal" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -155,7 +148,6 @@
         </form>
     </div>
 </div>
-
 @endsection
 
 @section('scripts')
@@ -163,17 +155,13 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
-        // Select2
         $('#skills').select2({
             placeholder: "Chọn kỹ năng",
             allowClear: true
         });
 
-        // Tooltip Bootstrap
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        tooltipTriggerList.forEach(t => new bootstrap.Tooltip(t));
+        $('[data-bs-toggle="tooltip"]').each((_, el) => new bootstrap.Tooltip(el));
 
-        // SweetAlert2: Delete confirm
         $('.delete-form').on('submit', function(e) {
             e.preventDefault();
             const form = this;
@@ -187,41 +175,27 @@
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Xóa',
                 cancelButtonText: 'Hủy'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
+            }).then(result => result.isConfirmed && form.submit());
         });
 
-        // SweetAlert2: Toast
-        const errorEl = document.getElementById('toast-errors');
-        if (errorEl?.dataset.errors) {
+        const showToast = (type, message) => {
             Swal.fire({
                 toast: true,
                 position: 'top-end',
-                icon: 'error',
-                title: errorEl.dataset.errors,
+                icon: type,
+                title: message,
                 showConfirmButton: false,
                 timer: 3000,
                 timerProgressBar: true,
             });
-        }
+        };
 
-        const successEl = document.getElementById('toast-success');
-        if (successEl?.dataset.success) {
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title: successEl.dataset.success,
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-            });
-        }
+        const errorEl = $('#toast-errors').data('errors');
+        if (errorEl) showToast('error', errorEl);
 
-        // SweetAlert2: Export CSV
+        const successEl = $('#toast-success').data('success');
+        if (successEl) showToast('success', successEl);
+
         $('#exportCsvBtn').on('click', function(e) {
             e.preventDefault();
             Swal.fire({
@@ -231,7 +205,7 @@
                 showCancelButton: true,
                 confirmButtonText: 'Có',
                 cancelButtonText: 'Không'
-            }).then((result) => {
+            }).then(result => {
                 if (result.isConfirmed) {
                     const link = document.createElement('a');
                     link.href = "{{ route('candidates.export') }}";
@@ -240,22 +214,12 @@
                     link.click();
                     document.body.removeChild(link);
 
-                    Swal.fire({
-                        title: 'Đang tải...',
-                        text: 'File CSV sẽ được tải về trong giây lát.',
-                        icon: 'success',
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
+                    showToast('success', 'File CSV sẽ được tải về trong giây lát.');
                 }
             });
         });
-        // SweetAlert2: Import CSV
-        $('#importCsvBtn').on('click', function(e) {
-            e.preventDefault();
-            const importModal = new bootstrap.Modal(document.getElementById('importCsvModal'));
-            importModal.show();
-        });
+
+        $('#importCsvBtn').on('click', () => new bootstrap.Modal($('#importCsvModal')).show());
     });
 </script>
 @endsection
