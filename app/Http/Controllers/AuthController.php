@@ -7,7 +7,6 @@ use App\Http\Requests\LoginRequest;
 use App\Services\AuthService;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -36,8 +35,6 @@ class AuthController extends Controller
             ]);
         }
     }
-
-
     public function showLoginForm()
     {
         return view('auth.login');
