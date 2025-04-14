@@ -38,7 +38,7 @@
             </form>
 
             <div class="mt-3 text-center">
-                <p>Chưa có tài khoản? <a href="{{ route('register') }}" class="text-decoration-none">Đăng ký ngay</a></p>
+                <p><a href="{{ route('password.request') }}" class="text-decoration-none">Quên mật khẩu?</a></p>
             </div>
         </div>
     </div>

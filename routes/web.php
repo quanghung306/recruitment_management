@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\DashboardController;
@@ -18,6 +20,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
 // Protected routes (auth only)
@@ -57,7 +64,5 @@ Route::middleware('auth')->group(function () {
         Route::post('/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('reset');
         Route::delete('/{user}', [AdminController::class, 'destroy'])->name('destroy');
         Route::patch('/{user}/toggle-active', [AdminController::class, 'toggleActive'])->name('admin.toggle-active');
-
     });
-
 });
