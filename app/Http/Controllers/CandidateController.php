@@ -87,7 +87,7 @@ class CandidateController extends Controller
                 ? response()->json(['message' => 'Xóa thành công'])
                 : redirect()->route('candidates.index')->with('success', 'Ứng viên đã được xóa');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return back()->with(['errors' => $e->getMessage()]);
         }
     }
 
@@ -104,8 +104,8 @@ class CandidateController extends Controller
             Excel::import(new CandidatesImport, $request->file('csv_file'));
             return redirect()->route('candidates.index')->with('success', 'Import CSV thành công.');
         } catch (Exception $e) {
-            logger()->error('Import CSV failed: ' . $e->getMessage());
-            return back()->withErrors(['error' => 'Lỗi khi import CSV: ' . $e->getMessage()]);
+            log::error('Import CSV failed: ' . $e->getMessage());
+            return back()->with(['errors' => 'Lỗi khi import CSV: trùng dữ liệu hoặc định dạng không đúng.']);
         }
     }
 }
