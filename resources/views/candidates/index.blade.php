@@ -220,6 +220,7 @@
         });
 
         $('#importCsvBtn').on('click', () => new bootstrap.Modal($('#importCsvModal')).show());
+
     });
 </script>
 @endsection

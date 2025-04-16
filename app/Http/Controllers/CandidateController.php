@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CandidateApplied;
 use App\Http\Requests\CandidateStoreRequest;
 use App\Http\Requests\CandidateUpdateRequest;
 use App\Models\Candidate;
@@ -33,7 +34,30 @@ class CandidateController extends Controller
             'users' => User::all(),
         ]);
     }
+    public function ShowApllyForm()
+    {
+        return view('candidates.apply');
+    }
+    // Nộp CV từ trang ngoài (không cần login)
+    public function storeApplication(CandidateStoreRequest $request)
+    {
+        try {
+            if ($request->hasFile('cv')) {
+                $data['cv_path'] = $request->file('cv')->store('cvs', 'public');
+            }
 
+            $candidate = $this->candidateService->createCandidate($request->validated());
+
+            // Gửi sự kiện real-time
+            event(new CandidateApplied($candidate));
+            Log::info('CandidateApplied event has been broadcasted');
+          
+            return redirect()->back()->with('success', 'Cảm ơn bạn đã ứng tuyển!');
+        } catch (Exception $e) {
+            Log::error('Error storing application: ' . $e->getMessage());
+            return redirect()->back()->with(['errors' => 'Có lỗi xảy ra khi nộp đơn.']);
+        }
+    }
     // // API: Return candidate list (JSON)
     // public function index(Request $request)
     // {
@@ -53,6 +77,7 @@ class CandidateController extends Controller
     public function store(CandidateStoreRequest $request)
     {
         $this->candidateService->createCandidate($request->validated());
+
         return redirect()->route('candidates.index')
             ->with('success', 'Ứng viên tạo thành công');
     }

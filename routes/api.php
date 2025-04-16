@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\SkillController;
 use Illuminate\Http\Request;

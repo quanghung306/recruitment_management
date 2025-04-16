@@ -20,8 +20,8 @@ class CandidateStoreRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:candidates,email',
             'phone' => 'required|digits_between:1,20',
-            'skills' => 'required|array',
-            'status' => 'required|in:new,interviewed,hired,rejected',
+            'skills' => 'sometimes|array',
+            'status' => 'sometimes|in:new,interviewed,hired,rejected',
             'cv_path' => 'nullable|file|mimes:pdf,doc,docx',
             'user_id' => 'nullable|exists:users,id'
         ];

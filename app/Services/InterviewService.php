@@ -14,7 +14,7 @@ class InterviewService
 
         return $query->paginate(5);
     }
-    public function create(array $data): Interview
+    public function createInterview(array $data): Interview
     {
         // Kiểm tra dữ liệu hợp lệ
         if (empty($data['candidate_id']) || empty($data['round']) || empty($data['interview_date'])) {

@@ -4,27 +4,28 @@ namespace App\Services;
 
 use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
-    public function register(array $data): array
+    public function register(array $data)
     {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role' => 'hr',
-        ]);
+        try {
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'role' => 'customer',
+            ]);
+            $token = $user->createToken('UserToken')->plainTextToken;
+            logger()->info("User registered with token: " . $token);
+            return redirect()->route('login')->with('success', 'Đăng ký thành công! Vui lòng đăng nhập.');
+        } catch (Exception $e) {
+            log::error('Login failed: ' . $e->getMessage());
+            throw $e;
+        }
 
-        $token = $user->createToken('UserToken')->plainTextToken;
-        logger()->info("User registered with token: " . $token);
-        return [
-            'token' => $token,
-            'message' => 'Đăng ký thành công. Bạn có thể đăng nhập ngay.'
-        ];
     }
     public function login(array $credentials)
     {

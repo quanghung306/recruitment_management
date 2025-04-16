@@ -31,8 +31,8 @@ class AuthController extends Controller
             session()->flash('success', $result['message']);
             return redirect()->route('login');
         } catch (Exception $e) {
-            return redirect()->route('register')->withErrors([
-                'message' => 'Đăng ký thất bại: ' . $e->getMessage()
+            return redirect()->route('register')->with([
+                'errors' => 'Đăng ký thất bại: ' . $e->getMessage()
             ]);
         }
     }

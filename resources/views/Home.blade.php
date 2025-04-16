@@ -18,6 +18,7 @@
             background: #f8f9fa;
             padding: 1rem;
         }
+
         .content-wrapper {
             margin-left: 280px;
             flex-grow: 1;
@@ -29,14 +30,18 @@
 </head>
 
 <body>
+    @if(session('info'))
+    <div id="toast-info" data-info="{{ session('info') }}"></div>
+    @endif
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div class="container">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     @guest
@@ -47,15 +52,34 @@
                         <a class="nav-link" href="{{ route('register') }}">Đăng ký</a>
                     </li>
                     @else
-                    <li class="nav-item ">
-                        <form action="{{ route('logout')}}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Đăng xuất</button>
-                        </form>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 38px; height: 38px; font-weight: 600;">
+                                {{ strtoupper(Auth::user()->name[0]) }}
+                            </div>
+                            <span>{{ Auth::user()->name }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                                    <span><i class="bi bi-bell me-2"></i>Thông báo</span>
+                                    <span class="badge bg-danger" id="notification-count">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="d-inline w-100">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
                     </li>
                     @endguest
-
-
                 </ul>
             </div>
         </div>
@@ -102,7 +126,14 @@
                         <i class="fas fa-user-shield me-2"></i>
                         Account Management
                     </a>
-                    @endif
+                </li>
+                @endif
+                @guest
+                <a href="{{ route('candidates.form') }}" class="nav-link">
+                    <i class="fas fa-user-shield me-2"></i>
+                    Apply for Job
+                </a>
+                @endguest
             </ul>
         </div>
         <!-- Main Content -->
@@ -110,11 +141,38 @@
             @yield('content')
         </main>
     </div>
+    @vite('resources/js/app.js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @yield('scripts')
+    <script>
+        $(document).ready(function() {
+            window.Echo.channel('hr-channel')
+                .listen('.candidate.applied', (e) => {
+                    console.log('Ứng viên mới:', e.candidate);
+                    let count = parseInt(document.getElementById('notification-count').innerText);
+                    console.log("Before update, notification count:", count);
+                    document.getElementById('notification-count').innerText = count + 1;
+                    console.log("After update, notification count:", document.getElementById('notification-count').innerText);
+                    const infoEl = document.getElementById('toast-info');
+                    if (infoEl?.dataset.info) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: '🎉 Ứng viên mới',
+                        text: `${e.candidate.name} vừa apply!`,
+                        showConfirmButton: true,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                }}).error((error) => {
+                    console.log('Echo error:', error);
+                });
+        });
+    </script>
 </body>
+
 
 </html>

@@ -56,7 +56,7 @@ class InterviewController extends Controller
         return back()->withErrors(['missing_data' => 'Dữ liệu không đầy đủ']);
     }
 
-    $interview = $this->interviewService->create($data);
+    $interview = $this->interviewService->createInterview($data);
 
     session()->flash('success', 'Tạo lịch phỏng vấn thành công!');
 

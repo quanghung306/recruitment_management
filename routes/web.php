@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InterviewController;
@@ -25,6 +25,11 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+    Route::prefix('apply')->name('candidates.')->group(function () {
+        Route::get('/', [CandidateController::class, 'ShowApllyForm'])->name('form');
+        Route::post('/', [CandidateController::class, 'storeApplication'])->name('submit');
+    });
+
 });
 
 // Protected routes (auth only)
@@ -42,7 +47,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/{candidate}/edit', [CandidateController::class, 'updateCandidateForm'])->name('edit');
         Route::put('/{candidate}', [CandidateController::class, 'update'])->name('update');
         Route::delete('/{candidate}', [CandidateController::class, 'destroy'])->name('destroy');
-    });
+
+});
+
+// Form nộp CV ứng viên (không cần login)
+
     // Interview routes
     Route::prefix('interviews')->name('interviews.')->group(function () {
         Route::get('/', [InterviewController::class, 'showInterviewsForm'])->name('index');
