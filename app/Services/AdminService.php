@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AdminService
 {
@@ -52,6 +53,7 @@ class AdminService
 
     public function toggleActive(User $user): bool
     {
+        dd($user->is_active);
         return DB::transaction(function () use ($user) {
             $user->is_active = !$user->is_active;
             return $user->save();
@@ -72,7 +74,7 @@ class AdminService
                 return $user->delete();
             } catch (Exception $e) {
                 DB::rollBack();
-                logger()->error('Error deleting admin: ' . $e->getMessage());
+                log::error('Error deleting admin: ' . $e->getMessage());
                 throw $e;
             }
         });

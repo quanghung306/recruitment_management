@@ -15,7 +15,7 @@
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="card shadow-lg p-4 rounded" style="width: 400px;">
             <h2 class="text-center text-primary">Đăng Nhập</h2>
-            @if (session('errors'))
+            @if (session('errors') && !session('account_locked'))
             <div id="toast-errors" data-errors="{{ session('errors') }}"></div>
             @endif
 
@@ -45,6 +45,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+@if (session('account_locked'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Tài khoản đã bị khóa',
+        text: 'Vui lòng liên hệ admin để được hỗ trợ.',
+        confirmButtonText: 'Đã hiểu',
+        timer: 5000,
+        timerProgressBar: true,
+    });
+</script>
+@endif
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const errorEl = document.getElementById('toast-errors');

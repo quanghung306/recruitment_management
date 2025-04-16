@@ -13,7 +13,7 @@ class ResetPasswordController extends Controller
 {
     public function showResetForm(Request $request, $token)
     {
-        return view('auth.password.reset', ['token' => $token, 'email' => $request->email]);
+        return view('auth.partials.reset', ['token' => $token, 'email' => $request->email]);
     }
 
     public function reset(Request $request)
@@ -23,7 +23,6 @@ class ResetPasswordController extends Controller
             'email'    => 'required|email',
             'password' => 'required|min:8|confirmed',
         ]);
-
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {

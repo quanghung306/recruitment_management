@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Services\AuthService;
@@ -44,7 +45,9 @@ class AuthController extends Controller
         try {
             $user = $this->authService->login($request->validated());
             if ($user) {
-                return redirect()->route('dashboard')->with('success', 'Đăng nhập thành công!');
+                return redirect()->route('dashboard')
+                ->withInput()
+                ->with('success', 'Đăng nhập thành công!');
             }
         } catch (Exception $e) {
             return redirect()->back()->with([

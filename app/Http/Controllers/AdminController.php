@@ -96,9 +96,10 @@ class AdminController extends Controller
                 $isActive
                     ? 'Tài khoản đã được kích hoạt'
                     : 'Tài khoản đã được vô hiệu hóa');
+            log::info('Toggled active status : ' . $isActive);
         } catch (Exception $e) {
             logger()->error('Error toggling active status: ' . $e->getMessage());
-            return back()->with('error', 'Không thể cập nhật trạng thái.');
+            return back()->with('errors', 'Không thể cập nhật trạng thái.');
         }
     }
 

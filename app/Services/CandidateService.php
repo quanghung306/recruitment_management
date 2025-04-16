@@ -44,18 +44,14 @@ class CandidateService
             $path = request()->file('cv')->store('cv_files', 'public');
             $data['cv_path'] = $path;
         }
-
         $skills = Arr::pull($data, 'skills', []);
         $candidate = Candidate::create($data);
 
         if (!empty($skills)) {
             $candidate->skills()->sync($skills);
         }
-
         return $candidate;
     }
-
-
     // Cập nhật ứng viên
     public function updateCandidate(Candidate $candidate, $data)
     {
