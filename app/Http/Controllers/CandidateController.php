@@ -50,8 +50,6 @@ class CandidateController extends Controller
 
             // Gửi sự kiện real-time
             event(new CandidateApplied($candidate));
-            Log::info('CandidateApplied event has been broadcasted');
-          
             return redirect()->back()->with('success', 'Cảm ơn bạn đã ứng tuyển!');
         } catch (Exception $e) {
             Log::error('Error storing application: ' . $e->getMessage());
