@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 // Trang chủ
 Route::get('/', function () {
-    return view('home');
+    return view('landing-page');
 });
 
 // Auth routes (guest only)

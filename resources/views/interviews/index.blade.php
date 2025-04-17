@@ -1,4 +1,4 @@
-@extends('home')
+@extends('layouts.home')
 
 @section('title', 'Quản lý lịch phỏng vấn')
 
@@ -132,7 +132,6 @@
         $('.delete-form').on('submit', function(e) {
             e.preventDefault();
             const form = this;
-
             Swal.fire({
                 title: 'Bạn có chắc chắn?',
                 text: "Ứng viên sẽ bị xóa và không thể khôi phục!",
@@ -148,7 +147,6 @@
                 }
             });
         });
-
         // SweetAlert2: Toast
         const errorEl = document.getElementById('toast-errors');
         if (errorEl?.dataset.errors) {
@@ -188,7 +186,6 @@
                 }
             });
         }
-
     });
 </script>
 @endsection

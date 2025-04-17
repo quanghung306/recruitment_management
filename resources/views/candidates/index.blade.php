@@ -1,4 +1,4 @@
-@extends('home')
+@extends('layouts.home')
 
 @section('title', 'Quản lý ứng viên')
 
@@ -200,7 +200,6 @@
         const successEl = $('#toast-success').data('success');
         if (successEl) showToast('success', successEl);
 
-
         $('#exportCsvBtn').on('click', function(e) {
             e.preventDefault();
             Swal.fire({
@@ -250,9 +249,6 @@
             }).error((error) => {
                 console.log('Echo error:', error);
             });
-
-
-
     });
 </script>
 @endsection
