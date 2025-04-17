@@ -14,10 +14,8 @@
                     @if (session('success'))
                     <div id="toast-success" data-success="{{ session('success') }}"></div>
                     @endif
-
                     <form action="{{ route('candidates.submit') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                         @csrf
-
                         <div class="mb-4">
                             <label for="name" class="form-label fw-bold">Họ tên <span class="text-danger">*</span></label>
                             <div class="input-group">
@@ -28,7 +26,6 @@
                                 Vui lòng nhập họ tên của bạn
                             </div>
                         </div>
-
                         <div class="mb-4">
                             <label for="email" class="form-label fw-bold">Email <span class="text-danger">*</span></label>
                             <div class="input-group">
@@ -77,8 +74,6 @@
         </div>
     </div>
 </div>
-
-
 @section('scripts')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
 
@@ -88,10 +83,8 @@
         // Enable Bootstrap form validation
         (function () {
             'use strict'
-
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
             var forms = document.querySelectorAll('.needs-validation')
-
             // Loop over them and prevent submission
             Array.prototype.slice.call(forms)
                 .forEach(function (form) {
