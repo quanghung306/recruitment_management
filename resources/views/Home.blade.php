@@ -129,7 +129,7 @@
                 </li>
                 @endif
                 @guest
-                <a href="{{ route('candidates.form') }}" class="nav-link">
+                <a href="{{ route('candidates.form') }}" class="nav-link {{request()->routeIs('candidates.*') ? 'active text-dark bg-white' : 'text-white'}}">
                     <i class="fas fa-user-shield me-2"></i>
                     Apply for Job
                 </a>

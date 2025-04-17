@@ -42,7 +42,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [CandidateController::class, 'createCandidateForm'])->name('create');
         Route::get('/export', [CandidateController::class, 'exportCsv'])->name('export');
         Route::post('/import', [CandidateController::class, 'importCsv'])->name('import');
-
         Route::post('/store', [CandidateController::class, 'store'])->name('store');
         Route::get('/{candidate}/edit', [CandidateController::class, 'updateCandidateForm'])->name('edit');
         Route::put('/{candidate}', [CandidateController::class, 'update'])->name('update');
