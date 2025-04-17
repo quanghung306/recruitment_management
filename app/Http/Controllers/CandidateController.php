@@ -38,16 +38,14 @@ class CandidateController extends Controller
     {
         return view('candidates.apply');
     }
-    // Nộp CV từ trang ngoài (không cần login)
+    // Nộp CV (không cần login)
     public function storeApplication(CandidateStoreRequest $request)
     {
         try {
             if ($request->hasFile('cv')) {
                 $data['cv_path'] = $request->file('cv')->store('cvs', 'public');
             }
-
             $candidate = $this->candidateService->createCandidate($request->validated());
-
             // Gửi sự kiện real-time
             event(new CandidateApplied($candidate));
             return redirect()->back()->with('success', 'Cảm ơn bạn đã ứng tuyển!');
@@ -75,7 +73,7 @@ class CandidateController extends Controller
     public function store(CandidateStoreRequest $request)
     {
         $this->candidateService->createCandidate($request->validated());
-
+        session()->flash('info', 'Một ứng viên mới đã apply!');
         return redirect()->route('candidates.index')
             ->with('success', 'Ứng viên tạo thành công');
     }

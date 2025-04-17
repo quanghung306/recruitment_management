@@ -34,9 +34,11 @@ class CandidateApplied implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'candidate_name' => $this->candidate->name,
-            'candidate_email' => $this->candidate->email,
-            'message' => 'Có một ứng viên mới nộp hồ sơ!',
+            'candidate' => [
+                'name' => $this->candidate->name,
+                'email' => $this->candidate->email,
+            ],
+            'info' => 'Có một ứng viên mới nộp hồ sơ!',
         ];
     }
 }

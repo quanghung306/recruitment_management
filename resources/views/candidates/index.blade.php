@@ -11,6 +11,10 @@
     @if (session('success'))
     <div id="toast-success" data-success="{{ session('success') }}"></div>
     @endif
+    @if(session('info'))
+    <div id="toast-info" data-info="{{ session('info') }}"></div>
+    <h1>hello</h1>
+    @endif
 
     <div class="card-header d-flex bd-highlight gap-2 align-items-center">
         <h5 class="me-auto p-2 bd-highlight">Danh sách ứng viên</h5>
@@ -196,6 +200,7 @@
         const successEl = $('#toast-success').data('success');
         if (successEl) showToast('success', successEl);
 
+
         $('#exportCsvBtn').on('click', function(e) {
             e.preventDefault();
             Swal.fire({
@@ -218,8 +223,35 @@
                 }
             });
         });
-
         $('#importCsvBtn').on('click', () => new bootstrap.Modal($('#importCsvModal')).show());
+        window.Echo.channel('hr-channel')
+            .listen('.candidate.applied', (e) => {
+                console.log('🔥 Dữ liệu nhận:', JSON.stringify(e, null, 2));
+                console.log('Ứng viên mới:', e);
+                if (e.candidate.name) {
+                    let count = parseInt(document.getElementById('notification-count').innerText);
+                    console.log("Before update, notification count:", count);
+                    document.getElementById('notification-count').innerText = count + 1;
+                    console.log("After update, notification count:", document.getElementById('notification-count').innerText);
+                    Swal.fire({
+                        icon: 'info',
+                        title: '🎉 Ứng viên mới',
+                        text: `${e.candidate.name} vừa apply!`,
+                        showConfirmButton: true,
+                        timerProgressBar: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    console.log("Dữ liệu ứng viên không hợp lệ:", e);
+                }
+            }).error((error) => {
+                console.log('Echo error:', error);
+            });
+
+
 
     });
 </script>

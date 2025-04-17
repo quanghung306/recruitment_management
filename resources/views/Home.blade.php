@@ -30,19 +30,10 @@
 </head>
 
 <body>
-    @if(session('info'))
-    <div id="toast-info" data-info="{{ session('info') }}"></div>
-    @endif
-
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse  " id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     @guest
                     <li class="nav-item">
@@ -52,8 +43,8 @@
                         <a class="nav-link" href="{{ route('register') }}">Đăng ký</a>
                     </li>
                     @else
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <li class="nav-item dropdown ">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 pe-5" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 38px; height: 38px; font-weight: 600;">
                                 {{ strtoupper(Auth::user()->name[0]) }}
                             </div>
@@ -89,8 +80,8 @@
         <!-- Sidebar  -->
         <div class="sidebar bg-dark text-white d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
             <a href="{{ route('dashboard') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                <i class="fas fa-briefcase me-2 fs-4"></i>
-                <span class="fs-5 fw-bold"> Dashboard</span>
+                <i class=" ps-3 fas fa-briefcase me-2 fs-4"></i>
+                <span class="fs-5 fw-bold "> Dashboard</span>
             </a>
 
             <hr class="my-4">
@@ -148,30 +139,7 @@
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @yield('scripts')
-    <script>
-        $(document).ready(function() {
-            window.Echo.channel('hr-channel')
-                .listen('.candidate.applied', (e) => {
-                    console.log('Ứng viên mới:', e.candidate);
-                    let count = parseInt(document.getElementById('notification-count').innerText);
-                    console.log("Before update, notification count:", count);
-                    document.getElementById('notification-count').innerText = count + 1;
-                    console.log("After update, notification count:", document.getElementById('notification-count').innerText);
-                    const infoEl = document.getElementById('toast-info');
-                    if (infoEl?.dataset.info) {
-                    Swal.fire({
-                        icon: 'info',
-                        title: '🎉 Ứng viên mới',
-                        text: `${e.candidate.name} vừa apply!`,
-                        showConfirmButton: true,
-                        timer: 3000,
-                        timerProgressBar: true,
-                    });
-                }}).error((error) => {
-                    console.log('Echo error:', error);
-                });
-        });
-    </script>
+   
 </body>
 
 
