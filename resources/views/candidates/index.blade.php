@@ -226,7 +226,6 @@
         window.Echo.channel('hr-channel')
             .listen('.candidate.applied', (e) => {
                 console.log('🔥 Dữ liệu nhận:', JSON.stringify(e, null, 2));
-                console.log('Ứng viên mới:', e);
                 if (e.candidate.name) {
                     let count = parseInt(document.getElementById('notification-count').innerText);
                     console.log("Before update, notification count:", count);
