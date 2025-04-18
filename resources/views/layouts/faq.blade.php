@@ -11,7 +11,7 @@
                     <div class="accordion-item border-0 shadow-sm mb-3">
                         <h2 class="accordion-header" id="headingOne">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Tôi cần chuẩn bị CV như thế nào?
+                                Tôi cần chuẩn bị CV như thế nào ?
                             </button>
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
@@ -20,12 +20,11 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- FAQ Item 2 -->
                     <div class="accordion-item border-0 shadow-sm mb-3">
                         <h2 class="accordion-header" id="headingTwo">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Thời gian nhận phản hồi là bao lâu?
+                                Thời gian nhận phản hồi là bao lâu ?
                             </button>
                         </h2>
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
