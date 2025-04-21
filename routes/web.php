@@ -48,9 +48,6 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{candidate}', [CandidateController::class, 'destroy'])->name('destroy');
     });
 
-
-// Form nộp CV ứng viên (không cần login)
-
     // Interview routes
     Route::prefix('interviews')->name('interviews.')->group(function () {
         Route::get('/', [InterviewController::class, 'showInterviewsForm'])->name('index');
