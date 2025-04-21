@@ -20,7 +20,7 @@ class CandidateUpdateRequest extends FormRequest
             'phone' => 'sometimes|required|digits_between:1,20',
             'skills' => 'sometimes|required|array',
             'status' => 'required|in:new,interviewed,hired,rejected',
-            'cv_path' => 'sometimes|nullable|file|mimes:pdf,doc,docx',
+            'cv_path' => 'sometimes|nullable|file|mimes:pdf,doc,docx|max:5240',
             'user_id' => 'nullable|required|exists:users,id'
         ];
     }

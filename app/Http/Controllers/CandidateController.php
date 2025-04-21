@@ -38,7 +38,7 @@ class CandidateController extends Controller
     {
         return view('candidates.apply');
     }
-    // Nộp CV (không cần login)
+    // upload CV
     public function storeApplication(CandidateStoreRequest $request)
     {
         try {

@@ -22,7 +22,7 @@ class CandidateStoreRequest extends FormRequest
             'phone' => 'required|digits_between:1,20',
             'skills' => 'sometimes|array',
             'status' => 'sometimes|in:new,interviewed,hired,rejected',
-            'cv_path' => 'nullable|file|mimes:pdf,doc,docx',
+            'cv_path' => 'nullable|file|mimes:pdf,doc,docx|max:51200',
             'user_id' => 'nullable|exists:users,id'
         ];
     }

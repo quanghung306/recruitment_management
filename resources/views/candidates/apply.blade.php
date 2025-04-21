@@ -1,4 +1,3 @@
-
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
@@ -66,6 +65,11 @@
                             </button>
                         </div>
                     </form>
+                    <!-- Progress bar -->
+                    <div class="progress mt-2 d-none" id="uploadProgress">
+                        <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <small id="uploadStatus" class="text-muted"></small>
                 </div>
                 <div class="card-footer bg-light">
                     <p class="text-muted mb-0 text-center">Thông tin của bạn sẽ được bảo mật theo chính sách của chúng tôi</p>
@@ -81,19 +85,16 @@
 <script>
     $(document).ready(function() {
         // Enable Bootstrap form validation
-        (function () {
+        (function() {
             'use strict'
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
             var forms = document.querySelectorAll('.needs-validation')
-            // Loop over them and prevent submission
             Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
+                .forEach(function(form) {
+                    form.addEventListener('submit', function(event) {
                         if (!form.checkValidity()) {
                             event.preventDefault()
                             event.stopPropagation()
                         }
-
                         form.classList.add('was-validated')
                     }, false)
                 })
@@ -162,6 +163,63 @@
                 timerProgressBar: true,
             });
         }
+
+        // Form Submit via AJAX
+        $('form.needs-validation').on('submit', function(event) {
+            event.preventDefault();
+
+            const form = this;
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+
+            const formData = new FormData(form);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '{{ route("candidates.submit") }}', true);
+            xhr.setRequestHeader('X-CSRF-TOKEN', $('input[name="_token"]').val());
+
+            $('#submitBtn').prop('disabled', true).text('Đang tải...');
+            $('#uploadProgress').removeClass('d-none');
+
+            xhr.upload.addEventListener('progress', function(e) {
+                if (e.lengthComputable) {
+                    const percent = (e.loaded / e.total * 100).toFixed(2);
+                    $('.progress-bar').css('width', percent + '%');
+                    $('#uploadStatus').text(`Đang tải lên: ${percent}%`);
+                }
+            });
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'CV đã được nộp thành công!',
+                        willClose: () => window.location.reload()
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: xhr.responseText || 'Đã xảy ra lỗi khi nộp CV.',
+                    });
+                    $('#submitBtn').prop('disabled', false).text('Nộp CV');
+                }
+            };
+
+            xhr.onerror = function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi mạng!',
+                    text: 'Không thể kết nối đến máy chủ.',
+                });
+                $('#submitBtn').prop('disabled', false).text('Nộp CV');
+            };
+
+            xhr.send(formData);
+        });
     });
 </script>
+
 @endsection

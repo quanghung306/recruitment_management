@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InterviewController;
+use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 
 // Trang chủ
@@ -29,7 +30,6 @@ Route::middleware('guest')->group(function () {
         Route::get('/', [CandidateController::class, 'ShowApllyForm'])->name('form');
         Route::post('/', [CandidateController::class, 'storeApplication'])->name('submit');
     });
-
 });
 
 // Protected routes (auth only)
@@ -46,8 +46,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/{candidate}/edit', [CandidateController::class, 'updateCandidateForm'])->name('edit');
         Route::put('/{candidate}', [CandidateController::class, 'update'])->name('update');
         Route::delete('/{candidate}', [CandidateController::class, 'destroy'])->name('destroy');
+    });
 
-});
 
 // Form nộp CV ứng viên (không cần login)
 
